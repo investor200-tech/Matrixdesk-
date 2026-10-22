@@ -8,5 +8,5 @@ anthropic==0.40.0
 pypdf==5.1.0
 cryptography==43.0.3
 pywebpush==1.14.0
-voyageai==0.3.3
+voyageai
 openai==1.50.2
