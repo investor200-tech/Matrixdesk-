@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0f1d">
+<title>MatrixDesk</title>
+<meta name="description" content="MatrixDesk answers your WhatsApp, Instagram and Messenger customers instantly, using only the prices, stock and policies you give it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0f1d; --bg2:#0e1527; --glass:rgba(15,23,42,.72); --glass2:rgba(22,31,54,.82);
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
+  --text:#e9edf7; --mute:#97a3bf; --dim:#667391;
+  --indigo:#6366f1; --indigo2:#8b8ff8; --emerald:#10b981; --emerald2:#34d399;
+  --amber:#f2b441; --rose:#fb7185; --blue:#60a5fa; --violet:#c084fc;
+  --wa:#34d399; --ig:#c084fc; --fb:#60a5fa;
+  --r:16px; --r2:12px; --r3:999px;
+  --display:'Fraunces',Georgia,'Times New Roman',serif;
+  --ui:'Manrope',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:var(--ui);font-size:15px;line-height:1.55;color:var(--text);background:var(--bg);min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:
+  radial-gradient(900px 600px at 12% -8%,rgba(99,102,241,.22),transparent 60%),
+  radial-gradient(800px 560px at 100% 10%,rgba(16,185,129,.14),transparent 60%),
+  radial-gradient(700px 500px at 50% 110%,rgba(99,102,241,.12),transparent 60%),var(--bg)}
+a{color:var(--indigo2);text-decoration:none}
+a:hover{text-decoration:underline}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--indigo2);outline-offset:2px;border-radius:8px}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.01em;line-height:1.15}
+.hidden{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.muted{color:var(--mute)}.dim{color:var(--dim)}
+.small{font-size:13px}.tiny{font-size:12px}
+.row{display:flex;align-items:center;gap:10px}.row.wrap{flex-wrap:wrap}.between{justify-content:space-between}
+.stack>*+*{margin-top:14px}
+.grow{flex:1;min-width:0}
+.ellipsis{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- surfaces ---------- */
+.card{background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.card.flat{padding:0;overflow:hidden}
+.card h3{font-size:19px;margin-bottom:4px}
+.card .sub{color:var(--mute);font-size:14px;margin-bottom:14px}
+.card.accent{border-color:rgba(99,102,241,.35);box-shadow:0 0 0 1px rgba(99,102,241,.12),0 18px 50px -24px rgba(99,102,241,.5)}
+.card.warn{border-color:rgba(242,180,65,.35);background:rgba(60,44,12,.35)}
+.card.danger{border-color:rgba(251,113,133,.35)}
+.grid{display:grid;gap:14px}
+.grid.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid.auto{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+@media(max-width:720px){.grid.c2,.grid.c3{grid-template-columns:1fr}}
+
+/* ---------- buttons, inputs ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:var(--r2);font-weight:600;font-size:15px;border:1px solid var(--line2);background:rgba(255,255,255,.04);transition:background .15s,transform .05s,border-color .15s;text-decoration:none!important;color:var(--text)}
+.btn:hover{background:rgba(255,255,255,.08)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn.primary{background:linear-gradient(135deg,#6366f1,#4f46e5);border-color:rgba(139,143,248,.6);color:#fff;box-shadow:0 10px 30px -12px rgba(99,102,241,.8)}
+.btn.primary:hover{background:linear-gradient(135deg,#7477f5,#5b52ec)}
+.btn.good{background:linear-gradient(135deg,#10b981,#059669);border-color:rgba(52,211,153,.6);color:#04210f}
+.btn.warn{background:var(--amber);border-color:var(--amber);color:#2a1d02}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--rose);border-color:rgba(251,113,133,.4)}
+.btn.sm{min-height:36px;padding:0 12px;font-size:13.5px;border-radius:10px}
+.btn.block{width:100%}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;animation:sp .7s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+label.f{display:block;font-size:13px;font-weight:600;color:var(--mute);margin-bottom:6px}
+.inp,select.inp,textarea.inp{width:100%;min-height:46px;padding:11px 14px;border-radius:var(--r2);background:rgba(8,12,24,.65);border:1px solid var(--line2);color:var(--text);transition:border-color .15s,box-shadow .15s}
+textarea.inp{min-height:110px;resize:vertical;line-height:1.5}
+.inp::placeholder{color:var(--dim)}
+.inp:focus{outline:none;border-color:var(--indigo2);box-shadow:0 0 0 3px rgba(99,102,241,.25)}
+select.inp{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--mute) 50%),linear-gradient(135deg,var(--mute) 50%,transparent 50%);background-position:calc(100% - 20px) 20px,calc(100% - 14px) 20px;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
+.field{margin-bottom:14px}
+.hint{font-size:12.5px;color:var(--dim);margin-top:5px}
+.err{color:var(--rose);font-size:13.5px;margin-top:8px}
+.ok{color:var(--emerald2)}
+
+.btn svg,.send svg,.back svg,.xbtn svg,.chip svg{width:19px;height:19px;flex:none}
+.btn.sm svg{width:16px;height:16px}
+.stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stats .stat{padding:16px}
+@media(max-width:520px){.stats .stat .v{font-size:26px}}
+
+/* ---------- chips, badges ---------- */
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border-radius:var(--r3);border:1px solid var(--line2);background:rgba(255,255,255,.03);font-size:13px;font-weight:600;color:var(--mute);white-space:nowrap}
+button.chip:hover{color:var(--text);background:rgba(255,255,255,.07)}
+.chip.on{background:rgba(99,102,241,.2);border-color:rgba(139,143,248,.6);color:#fff}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:var(--r3);font-size:12px;font-weight:700;border:1px solid var(--line2);color:var(--mute)}
+.badge.g{color:var(--emerald2);border-color:rgba(52,211,153,.4);background:rgba(16,185,129,.1)}
+.badge.a{color:var(--amber);border-color:rgba(242,180,65,.4);background:rgba(242,180,65,.08)}
+.badge.r{color:var(--rose);border-color:rgba(251,113,133,.4);background:rgba(251,113,133,.08)}
+.badge.i{color:var(--indigo2);border-color:rgba(139,143,248,.4);background:rgba(99,102,241,.1)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--dim);display:inline-block;flex:none}
+.dot.g{background:var(--emerald2);box-shadow:0 0 0 3px rgba(52,211,153,.18)}
+.dot.a{background:var(--amber)}.dot.r{background:var(--rose)}
+.ch-wa{color:var(--wa)}.ch-ig{color:var(--ig)}.ch-fb{color:var(--fb)}
+.count{min-width:20px;height:20px;padding:0 6px;border-radius:var(--r3);background:var(--emerald);color:#04210f;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+.count.r{background:var(--rose);color:#2b0610}
+
+/* ---------- toasts, modal ---------- */
+#toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + var(--safe-b));z-index:200;display:flex;flex-direction:column;gap:8px;width:min(92vw,420px);pointer-events:none}
+@media(min-width:900px){#toasts{bottom:28px}}
+.toast{pointer-events:auto;padding:12px 16px;border-radius:var(--r2);background:#131b31;border:1px solid var(--line2);box-shadow:0 14px 40px -10px rgba(0,0,0,.7);font-size:14px;animation:tin .22s ease-out}
+.toast.good{border-color:rgba(52,211,153,.5)}.toast.bad{border-color:rgba(251,113,133,.55)}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.modal-back{position:fixed;inset:0;z-index:150;background:rgba(4,7,16,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;padding:0}
+@media(min-width:640px){.modal-back{align-items:center;padding:24px}}
+.modal{width:100%;max-width:460px;max-height:92dvh;overflow:auto;background:var(--glass2);border:1px solid var(--line2);border-radius:22px 22px 0 0;padding:24px 22px calc(24px + var(--safe-b));box-shadow:0 30px 80px -20px rgba(0,0,0,.8)}
+@media(min-width:640px){.modal{border-radius:22px}}
+.modal.wide{max-width:620px}
+.modal h3{font-size:22px;margin-bottom:6px}
+.xbtn{position:absolute;right:14px;top:12px;width:36px;height:36px;border-radius:50%;color:var(--mute);font-size:22px}
+.xbtn:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.modal{position:relative}
+
+/* ---------- skeleton, empty ---------- */
+.skel{border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.09),rgba(255,255,255,.04));background-size:200% 100%;animation:sk 1.3s infinite}
+@keyframes sk{from{background-position:200% 0}to{background-position:-200% 0}}
+.empty{text-align:center;padding:36px 18px;color:var(--mute)}
+.empty h3{color:var(--text);font-size:19px;margin-bottom:6px}
+.empty p{max-width:360px;margin:0 auto 16px;font-size:14.5px}
+.center-screen{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px}
+.center-screen .card{width:100%;max-width:460px;text-align:center;padding:30px 24px}
+.center-screen h2{font-size:26px;margin:14px 0 8px}
+
+/* ---------- brand ---------- */
+.brand{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.02em;color:#fff;display:inline-flex;align-items:center;gap:9px}
+.brand i{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#10b981);display:inline-block;box-shadow:0 6px 18px -6px rgba(99,102,241,.9)}
+
+/* =========================================================
+   GATE (public page)
+   ========================================================= */
+#gate{min-height:100dvh}
+.g-head{position:sticky;top:0;z-index:30;background:rgba(10,15,29,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.g-head .in{max-width:1120px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.g-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.hero{padding:44px 0 30px;display:grid;gap:36px;align-items:center}
+@media(min-width:900px){.hero{grid-template-columns:1.05fr .95fr;padding:72px 0 50px;gap:56px}}
+.hero h1{font-size:clamp(38px,8vw,64px);letter-spacing:-.025em;margin-bottom:18px}
+.hero p.lead{font-size:18px;color:var(--mute);max-width:520px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 14px}
+.hero .fine{color:var(--dim);font-size:13.5px}
+.phone{width:min(100%,340px);margin:0 auto;border-radius:38px;padding:12px;background:linear-gradient(160deg,#1a2342,#0c1226);border:1px solid var(--line2);box-shadow:0 40px 90px -30px rgba(99,102,241,.55)}
+.phone .top{display:flex;align-items:center;gap:10px;padding:14px 14px 12px;font-weight:700}
+.phone .screen{background:#0b1328;border-radius:26px;padding:14px 12px;display:flex;flex-direction:column;gap:9px;min-height:360px;border:1px solid var(--line)}
+.bub{max-width:82%;padding:9px 12px;border-radius:16px;font-size:14px;line-height:1.45}
+.bub small{display:block;font-size:11px;opacity:.6;margin-top:3px}
+.bub.in{background:#1a2442;align-self:flex-start;border-bottom-left-radius:5px}
+.bub.out{background:#0f6b55;color:#eafff6;align-self:flex-end;border-bottom-right-radius:5px}
+.sec{padding:54px 0}
+.sec h2{font-size:clamp(28px,5vw,40px);margin-bottom:10px}
+.sec .lede{color:var(--mute);max-width:560px;margin-bottom:26px}
+.steps{display:grid;gap:14px}
+@media(min-width:800px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{padding:22px;border-radius:var(--r);border:1px solid var(--line);background:var(--glass)}
+.step b{display:block;font-family:var(--display);font-size:20px;margin-bottom:6px}
+.step span.n{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;background:rgba(99,102,241,.22);color:#fff;font-weight:700;margin-bottom:12px}
+.price{max-width:460px;border-radius:22px;padding:28px;border:1px solid rgba(139,143,248,.5);background:var(--glass);box-shadow:0 30px 80px -40px rgba(99,102,241,.8)}
+.price h3{font-size:22px}
+.price .amt{font-family:var(--display);font-size:56px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin:10px 0 16px}
+.price .amt small{display:block;font-family:var(--ui);font-size:15px;line-height:1.3;color:var(--mute);font-weight:500;margin:6px 0 0}
+.price ul{list-style:none;display:grid;gap:11px;margin-bottom:22px}
+.price li{display:flex;gap:10px;color:#cdd5e8}
+.price li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;background:rgba(16,185,129,.2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/12px no-repeat}
+.g-foot{border-top:1px solid var(--line);margin-top:30px;padding:34px 0 calc(40px + var(--safe-b))}
+.g-foot .name{font-weight:700;margin-bottom:10px}
+.g-foot nav{display:flex;flex-wrap:wrap;gap:8px 22px}
+.g-foot a{color:var(--mute);font-size:14.5px}
+.g-foot a:hover{color:#fff}
+.tabs{display:flex;background:rgba(8,12,24,.7);border:1px solid var(--line);border-radius:var(--r2);padding:4px;margin-bottom:18px}
+.tabs button{flex:1;min-height:40px;border-radius:9px;font-weight:700;color:var(--mute)}
+.tabs button.on{background:rgba(99,102,241,.28);color:#fff}
+.pass{position:relative}
+.pass button{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:700;color:var(--mute);padding:6px 8px}
+.or{display:flex;align-items:center;gap:12px;color:var(--dim);font-size:13px;margin:16px 0}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.linkbtn{color:var(--indigo2);font-weight:600;font-size:14px}
+.linkbtn:hover{text-decoration:underline}
+.strong .linkbtn{font-weight:800;font-size:16px}
+.strong{color:var(--text,#e8ecf8)}
+
+/* legal pages (inside this file) */
+.legal{max-width:720px;margin:0 auto;padding:40px 0 20px}
+.legal h1{font-size:clamp(34px,7vw,50px);letter-spacing:-.02em;margin-bottom:8px}
+.legal .upd{color:var(--dim);font-size:14.5px;margin-bottom:30px}
+.legal h2{font-size:25px;margin:34px 0 10px}
+.legal p{font-size:16.5px;line-height:1.75;color:#d3daea;margin-bottom:14px}
+.legal a{color:var(--indigo2);text-decoration:underline;text-underline-offset:3px}
+.legal .back{display:inline-flex;width:auto;height:auto;border-radius:0;color:var(--mute);margin-bottom:22px;font-size:14.5px;font-weight:600;text-decoration:none}
+.legal .back:hover{background:none;color:#fff}
+
+/* =========================================================
+   DASHBOARD SHELL
+   ========================================================= */
+#dash{display:flex;min-height:100dvh}
+.side{display:none;width:268px;flex:none;position:sticky;top:0;height:100dvh;overflow-y:auto;border-right:1px solid var(--line);background:rgba(9,13,26,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:18px 14px;flex-direction:column}
+@media(min-width:900px){.side{display:flex}}
+.side .biz{padding:6px 10px 16px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.side .biz b{display:block;font-family:var(--display);font-size:20px;line-height:1.2;word-break:break-word}
+.side .biz span{font-size:12.5px;color:var(--dim)}
+.nav-g{margin:12px 0 4px;padding:0 12px;font-size:12px;font-weight:700;color:var(--dim)}
+.nav a,.nav button.navb{display:flex;align-items:center;gap:12px;min-height:42px;padding:0 12px;border-radius:11px;color:var(--mute);font-weight:600;width:100%;text-align:left;text-decoration:none!important;font-size:14.5px}
+.nav a:hover,.nav button.navb:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.nav a.on{background:rgba(99,102,241,.2);color:#fff;box-shadow:inset 3px 0 0 var(--indigo2)}
+.nav svg{width:19px;height:19px;flex:none}
+.nav .count{margin-left:auto}
+.side .foot{margin-top:auto;padding:14px 10px 4px;border-top:1px solid var(--line);font-size:12.5px;color:var(--dim)}
+.side .foot a{color:var(--dim)}
+.mainwrap{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(10,15,29,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar .t{font-family:var(--display);font-size:19px;font-weight:600;min-width:0}
+.topbar .chipw{margin-left:auto}
+.walletchip{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 13px;border-radius:var(--r3);border:1px solid rgba(52,211,153,.4);background:rgba(16,185,129,.1);font-weight:700;font-size:14px;color:var(--emerald2)}
+.walletchip.low{border-color:rgba(251,113,133,.5);background:rgba(251,113,133,.1);color:var(--rose)}
+.content{padding:20px 16px calc(96px + var(--safe-b));max-width:1100px;width:100%;margin:0 auto}
+@media(min-width:900px){.content{padding:30px 32px 60px}.topbar{padding:12px 32px}}
+.content.bleed{padding:0;max-width:none}
+.pagehead{margin-bottom:20px}
+.pagehead h1{font-size:30px}
+.pagehead p{color:var(--mute);margin-top:4px;max-width:620px}
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(9,13,26,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:6px 4px calc(6px + var(--safe-b))}
+@media(min-width:900px){.bottomnav{display:none}}
+.bottomnav a,.bottomnav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;font-size:11.5px;font-weight:700;color:var(--dim);position:relative;text-decoration:none!important}
+.bottomnav svg{width:22px;height:22px}
+.bottomnav .on{color:#fff}
+.bottomnav .count{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px;font-size:11px}
+.drawer-back{position:fixed;inset:0;z-index:90;background:rgba(4,7,16,.6)}
+.drawer{position:fixed;top:0;bottom:0;left:0;z-index:100;width:min(86vw,320px);background:#0b1124;border-right:1px solid var(--line2);padding:18px 14px calc(18px + var(--safe-b));overflow-y:auto;display:flex;flex-direction:column;animation:dr .2s ease-out}
+@keyframes dr{from{transform:translateX(-30px);opacity:0}to{transform:none;opacity:1}}
+.banner{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px;padding:14px 16px;border-radius:var(--r);border:1px solid rgba(242,180,65,.4);background:rgba(60,44,12,.4)}
+.banner b{display:block}
+
+/* stats */
+.stat{padding:18px}
+.stat .k{font-size:13px;color:var(--mute);font-weight:600}
+.stat .v{font-family:var(--display);font-size:32px;font-weight:600;margin-top:4px;letter-spacing:-.01em}
+.stat .n{font-size:12.5px;color:var(--dim);margin-top:2px}
+.bars{display:flex;align-items:flex-end;gap:3px;height:120px}
+.bars i{flex:1;min-width:3px;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--indigo2),rgba(99,102,241,.35));min-height:2px}
+.pk{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.pk button{text-align:left;padding:16px;border-radius:var(--r);border:1px solid var(--line2);background:rgba(255,255,255,.03);transition:border-color .15s,background .15s}
+.pk button:hover{border-color:var(--indigo2);background:rgba(99,102,241,.1)}
+.pk b{font-family:var(--display);font-size:24px;display:block}
+.pk span{font-size:13px;color:var(--mute)}
+.list .it{display:flex;align-items:center;gap:12px;padding:14px 16px;border-top:1px solid var(--line)}
+.list .it:first-child{border-top:0}
+.ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none;background:rgba(255,255,255,.06)}
+.ico svg{width:22px;height:22px}
+.ico.wa{background:rgba(52,211,153,.14);color:var(--wa)}.ico.ig{background:rgba(192,132,252,.14);color:var(--ig)}.ico.fb{background:rgba(96,165,250,.14);color:var(--fb)}
+.steps2{list-style:none;display:grid;gap:10px;margin-top:14px}
+.steps2 li{display:flex;gap:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
+.steps2 .m{flex:none;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;background:rgba(255,255,255,.08);color:var(--mute)}
+.steps2 li.done .m{background:rgba(16,185,129,.25);color:var(--emerald2)}
+.steps2 li.current{border-color:rgba(139,143,248,.6);background:rgba(99,102,241,.1)}
+.steps2 li.current .m{background:var(--indigo);color:#fff}
+.steps2 b{display:block;font-size:14.5px}.steps2 span{font-size:13.5px;color:var(--mute)}
+details.fold{border:1px solid var(--line);border-radius:12px;padding:0 14px;margin-top:12px}
+details.fold summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600;color:var(--mute);list-style:none}
+details.fold summary::-webkit-details-marker{display:none}
+details.fold[open]{padding-bottom:12px}
+details.fold p{font-size:14px;color:var(--mute);margin-top:8px}
+
+/* =========================================================
+   INBOX
+   ========================================================= */
+.inbox{display:grid;height:calc(100dvh - 57px - 70px - var(--safe-b));min-height:420px}
+@media(min-width:900px){.inbox{height:calc(100dvh - 61px);grid-template-columns:340px minmax(0,1fr)}}
+@media(min-width:1280px){.inbox.cust{grid-template-columns:340px minmax(0,1fr) 300px}}
+.ib-list,.ib-thread,.ib-cust{min-height:0;display:flex;flex-direction:column;border-right:1px solid var(--line)}
+.ib-list{background:rgba(9,13,26,.5)}
+.ib-head{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.seg{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.th{display:flex;gap:12px;padding:13px 14px;border-bottom:1px solid var(--line);cursor:pointer;width:100%;text-align:left;align-items:flex-start}
+.th:hover{background:rgba(255,255,255,.04)}
+.th.on{background:rgba(99,102,241,.16)}
+.av{width:42px;height:42px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;background:rgba(255,255,255,.08)}
+.av.wa{background:rgba(52,211,153,.18);color:var(--wa)}.av.ig{background:rgba(192,132,252,.18);color:var(--ig)}.av.fb{background:rgba(96,165,250,.18);color:var(--fb)}
+.th .nm{font-weight:700;font-size:14.5px}
+.th .pv{font-size:13.5px;color:var(--mute);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.th.unread .nm,.th.unread .pv{color:#fff}
+.th .tm{font-size:12px;color:var(--dim);white-space:nowrap}
+.ib-thread{background:rgba(8,12,24,.35)}
+.ib-top{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(9,13,26,.6)}
+.back{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--mute);flex:none}
+.back:hover{background:rgba(255,255,255,.08);color:#fff}
+@media(min-width:900px){.back.m{display:none}}
+.msgs{flex:1;min-height:0;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch}
+.m-row{display:flex;flex-direction:column;max-width:84%}
+.m-row.in{align-self:flex-start}.m-row.out{align-self:flex-end;align-items:flex-end}
+.m-b{padding:9px 13px;border-radius:17px;font-size:14.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.m-row.in .m-b{background:#1a2442;border-bottom-left-radius:5px}
+.m-row.out.ai .m-b{background:rgba(99,102,241,.3);border:1px solid rgba(139,143,248,.35);border-bottom-right-radius:5px}
+.m-row.out.vendor .m-b{background:#0f6b55;color:#eafff6;border-bottom-right-radius:5px}
+.m-meta{font-size:11.5px;color:var(--dim);margin-top:3px;padding:0 4px}
+.dayline{align-self:center;font-size:12px;color:var(--dim);padding:3px 12px;border-radius:var(--r3);background:rgba(255,255,255,.05);margin:6px 0}
+.composer{border-top:1px solid var(--line);padding:10px 12px calc(10px + 0px);background:rgba(9,13,26,.7)}
+.composer .ta{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;min-height:46px;max-height:140px;resize:none;padding:12px 14px;border-radius:14px;background:rgba(8,12,24,.7);border:1px solid var(--line2);line-height:1.4}
+.composer textarea:focus{outline:none;border-color:var(--indigo2)}
+.send{width:46px;height:46px;border-radius:14px;background:var(--indigo);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.send[disabled]{opacity:.4}
+.qr{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.qr::-webkit-scrollbar{display:none}
+.notice{padding:9px 14px;font-size:13.5px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.notice.a{background:rgba(242,180,65,.1);color:var(--amber)}
+.notice.g{background:rgba(16,185,129,.1);color:var(--emerald2)}
+.notice.r{background:rgba(251,113,133,.1);color:var(--rose)}
+.ib-cust{display:none;border-right:0;border-left:1px solid var(--line);background:rgba(9,13,26,.5);padding:16px;overflow-y:auto}
+@media(min-width:1280px){.inbox.cust .ib-cust{display:flex}}
+.pane-hide{display:none}
+@media(min-width:900px){.pane-hide{display:flex}}
+.sheet-cust{display:block}
+
+/* tables / items */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:12.5px;text-align:left;color:var(--dim);font-weight:700;padding:10px 14px;border-bottom:1px solid var(--line)}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+@media(max-width:720px){.tbl thead{display:none}.tbl,.tbl tbody,.tbl tr,.tbl td{display:block}.tbl tr{padding:12px 14px;border-bottom:1px solid var(--line)}.tbl td{border:0;padding:3px 0}.tbl td[data-l]::before{content:attr(data-l) ": ";color:var(--dim);font-size:12.5px}}
+.drop{border:1.5px dashed var(--line2);border-radius:var(--r);padding:26px 18px;text-align:center;color:var(--mute);transition:border-color .15s,background .15s}
+.drop.over{border-color:var(--indigo2);background:rgba(99,102,241,.1)}
+.rec{display:inline-flex;align-items:center;gap:10px}
+.pulse{width:12px;height:12px;border-radius:50%;background:var(--rose);animation:pl 1s infinite}
+@keyframes pl{50%{opacity:.35;transform:scale(.8)}}
+.toggle{position:relative;width:48px;height:28px;border-radius:var(--r3);background:rgba(255,255,255,.14);flex:none;transition:background .15s}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .15s}
+.toggle.on{background:var(--emerald)}.toggle.on::after{transform:translateX(20px)}
+@media(min-width:1280px){.cust-btn{display:none}}
+@media(max-width:519px){.hide-sm{display:none!important}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div id="boot" class="center-screen"><div class="card"><div class="brand" style="justify-content:center"><i></i>MatrixDesk</div><p class="muted" style="margin-top:14px">Loading…</p></div></div>
+
+<!-- ================= PUBLIC PAGE (gate) ================= -->
+<div id="gate" class="hidden">
+  <header class="g-head"><div class="in">
+    <a class="brand" href="/" aria-label="MatrixDesk home"><i></i>MatrixDesk</a>
+    <div class="row">
+      <button class="btn ghost sm hide-sm" data-act="signin" id="g-signin-top">Sign in</button>
+      <button class="btn primary sm" data-act="signup" id="g-connect-top">Connect WhatsApp</button>
+    </div>
+  </div></header>
+
+  <main class="g-wrap" id="home-sections">
+    <section class="hero">
+      <div>
+        <h1>Your business, answering customers at 2am.</h1>
+        <p class="lead">MatrixDesk replies to your WhatsApp customers instantly, using only the prices, stock and policies you give it. No guessing, no made-up answers.</p>
+        <div class="cta">
+          <button class="btn warn" data-act="chat" id="g-chat">Chat with it now</button>
+          <button class="btn" data-act="how">See how it works</button>
+        </div>
+        <p class="fine">No card required to start · Keep your existing WhatsApp number</p>
+        <p class="fine" id="g-signin-line" style="margin-top:8px">Already have an account? <button class="linkbtn" data-act="signin">Sign in</button></p>
+      </div>
+      <div class="phone" aria-label="Example WhatsApp conversation">
+        <div class="top"><span class="dot g"></span>Ada's Fashion House</div>
+        <div class="screen">
+          <div class="bub in">Good evening, do you have this dress in size 42?<small>9:47 PM</small></div>
+          <div class="bub out">Yes, size 42 is available — ₦18,000. Delivery to Lagos is ₦1,500, same day. Want me to place the order?<small>9:47 PM</small></div>
+          <div class="bub in">Yes please, how do I pay?<small>9:48 PM</small></div>
+          <div class="bub out">Send ₦19,500 to the account below, and I'll confirm as soon as it lands.<small>9:48 PM</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="how">
+      <h2>How it works</h2>
+      <p class="lede">You teach it once. It answers from what you taught it, and you can step in on any chat.</p>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><b>Teach it your business</b><p class="muted">Add your products and prices, then upload a file, type your policies or record a voice note.</p></div>
+        <div class="step"><span class="n">2</span><b>Connect your channels</b><p class="muted">Connect WhatsApp, Instagram and Facebook Messenger. Each one gets its own separate inbox.</p></div>
+        <div class="step"><span class="n">3</span><b>Step in whenever you like</b><p class="muted">Reply from your dashboard and the AI goes quiet for that customer while you talk.</p></div>
+      </div>
+    </section>
+
+    <section class="sec" id="pricing" style="padding-top:20px">
+      <div class="price">
+        <h3>Full Build</h3>
+        <div class="amt" id="g-price">₦70,000<small>one-time</small></div>
+        <ul>
+          <li>Custom AI trained on your real products, prices and policies</li>
+          <li>Connected to your own WhatsApp number</li>
+          <li>No monthly fee to us, ever</li>
+          <li>You top up your own AI usage as you go, pennies per conversation</li>
+        </ul>
+        <button class="btn primary block" data-act="signup">Create your account</button>
+      </div>
+    </section>
+  </main>
+
+  <main class="g-wrap hidden" id="legal-view"></main>
+
+  <footer class="g-foot"><div class="g-wrap">
+    <div class="name">Matrix Route Solution Enterprises</div>
+    <nav aria-label="Legal and contact">
+      <a href="/privacy" data-legal="privacy">Privacy Policy</a>
+      <a href="/terms" data-legal="terms">Terms of Service</a>
+      <a href="/data-deletion" data-legal="data-deletion">Data Deletion</a>
+      <a href="/contact" data-legal="contact">Contact</a>
+    </nav>
+  </div></footer>
+</div>
+
+<!-- ================= DASHBOARD (built by script) ================= -->
+<div id="dash" class="hidden"></div>
+
+<!-- ================= FULL-SCREEN STATES ================= -->
+<div id="screen" class="hidden"></div>
+
+<div id="overlay"></div>
+<div id="toasts" aria-live="polite"></div>
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   SETTINGS you may change
+   ============================================================ */
+var API = 'https://matrixdesk-backend.onrender.com';   // your Render backend
+var DEMO_CHAT_URL = '';  // paste your demo bot link here, e.g. https://wa.me/234XXXXXXXXXX . Left empty, "Chat with it now" opens sign up.
+
+/* ============================================================
+   Small helpers
+   ============================================================ */
+var $ = function(s, r){ return (r||document).querySelector(s); };
+var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function money(n){ n = Number(n||0); return '₦' + n.toLocaleString('en-NG', {maximumFractionDigits:2}); }
+function num(n){ return Number(n||0).toLocaleString('en-NG'); }
+function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+function initials(s){ s = String(s||'?').replace(/^(ig:|fb:)/,'').trim(); var p = s.split(/\s+/); return ((p[0]||'?')[0] + (p.length>1 ? p[1][0] : '')).toUpperCase(); }
+function parseTs(t){ if(!t) return null; var d = new Date(t); return isNaN(d) ? null : d; }
+function fmtTime(t){ var d = parseTs(t); return d ? d.toLocaleTimeString('en-NG', {hour:'numeric', minute:'2-digit'}) : ''; }
+function fmtDay(t){ var d = parseTs(t); if(!d) return ''; var n = new Date(), y = new Date(Date.now()-864e5);
+  if(d.toDateString()===n.toDateString()) return 'Today'; if(d.toDateString()===y.toDateString()) return 'Yesterday';
+  return d.toLocaleDateString('en-NG', {day:'numeric', month:'short', year: d.getFullYear()===n.getFullYear()?undefined:'numeric'}); }
+function ago(t){ var d = parseTs(t); if(!d) return ''; var s = Math.max(0, (Date.now()-d.getTime())/1000);
+  if(s<60) return 'now'; if(s<3600) return Math.floor(s/60)+'m'; if(s<86400) return Math.floor(s/3600)+'h';
+  if(s<172800) return 'Yesterday'; return d.toLocaleDateString('en-NG',{day:'numeric',month:'short'}); }
+function hoursLeft(t){ var d = parseTs(t); return d ? (d.getTime()-Date.now())/3600000 : 0; }
+function debounce(fn, ms){ var h; return function(){ var a = arguments, c = this; clearTimeout(h); h = setTimeout(function(){ fn.apply(c, a); }, ms); }; }
+
+var CH = {
+  whatsapp:  {key:'whatsapp',  short:'wa', name:'WhatsApp',  inbox:'WhatsApp inbox',  cls:'ch-wa'},
+  instagram: {key:'instagram', short:'ig', name:'Instagram', inbox:'Instagram inbox', cls:'ch-ig'},
+  facebook:  {key:'facebook',  short:'fb', name:'Messenger', inbox:'Messenger inbox', cls:'ch-fb'}
+};
+var CH_ORDER = ['whatsapp','instagram','facebook'];
+
+var IC = {
+  home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',
+  wallet:'<rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1.2"/>',
+  chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
+  whatsapp:'<path d="M20 12a8 8 0 0 1-11.9 7L4 20l1.1-4A8 8 0 1 1 20 12z"/><path d="M9 9.2c.2 2.6 2.6 5 5.5 5.6l1.2-1.4-1.9-.9-.8.7a4 4 0 0 1-1.9-1.9l.7-.8-.9-1.9z"/>',
+  instagram:'<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".8"/>',
+  facebook:'<path d="M12 3a9 9 0 0 0-6.4 15.3L4.5 21l3.1-1A9 9 0 1 0 12 3z"/><path d="M7.5 13.5l3.2-3.3 2.4 2.1 3.4-2.9-3.3 3.6-2.4-2z"/>',
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M16 4.7a3.5 3.5 0 0 1 0 6.6M18 14.8c2 .7 3.2 2.4 3.5 5.2"/>',
+  box:'<path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9"/>',
+  book:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11M9 8h6"/>',
+  spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 1.8L21.5 18.5l-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/>',
+  reply:'<path d="M9 8L4 12l5 4"/><path d="M4 12h9a7 7 0 0 1 7 7v1"/>',
+  plug:'<path d="M9 3v5M15 3v5"/><path d="M6 8h12v3a6 6 0 0 1-12 0z"/><path d="M12 17v4"/>',
+  bell:'<path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7 2.5 7h-17S6 15 6 9z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+  logout:'<path d="M9 4H5v16h4"/><path d="M16 8l4 4-4 4M20 12H9"/>',
+  send:'<path d="M4 12l16-8-6 17-3-7z"/><path d="M11 14l9-10"/>',
+  mic:'<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+  back:'<path d="M15 5l-7 7 7 7"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+  edit:'<path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/>',
+  dl:'<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
+  file:'<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5"/>',
+  check:'<path d="M5 12l5 5 9-10"/>',
+  alert:'<path d="M12 4l9.5 16h-19z"/><path d="M12 10v4M12 17.2v.1"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.1"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4.2 4-6 8-6s7.2 1.8 8 6"/>'
+};
+function ico(n, extra){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"'+(extra||'')+'>'+(IC[n]||'')+'</svg>'; }
+
+/* ============================================================
+   App state
+   ============================================================ */
+var S = {
+  cfg: null, cfgP: null, session: null, me: null, bill: null,
+  timers: [], view: null, summary: {}, deferredReady: false
+};
+function addTimer(id){ S.timers.push(id); return id; }
+function clearTimers(){ S.timers.forEach(function(t){ clearInterval(t); clearTimeout(t); }); S.timers = []; }
+
+/* ============================================================
+   Toasts and modal
+   ============================================================ */
+function toast(msg, kind){
+  var el = document.createElement('div'); el.className = 'toast ' + (kind||''); el.textContent = msg;
+  $('#toasts').appendChild(el);
+  setTimeout(function(){ el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(function(){ el.remove(); }, 320); }, kind==='bad' ? 6500 : 3800);
+}
+var modalOpen = null;
+function openModal(html, opts){
+  opts = opts || {};
+  closeModal();
+  var back = document.createElement('div'); back.className = 'modal-back';
+  back.innerHTML = '<div class="modal'+(opts.wide?' wide':'')+'" role="dialog" aria-modal="true"><button class="xbtn" aria-label="Close" data-close>×</button>'+html+'</div>';
+  back.addEventListener('mousedown', function(e){ if(e.target===back && !opts.sticky) closeModal(); });
+  back.addEventListener('click', function(e){ if(e.target.closest('[data-close]')) closeModal(); });
+  $('#overlay').appendChild(back); modalOpen = back; document.body.style.overflow = 'hidden';
+  var f = $('input,textarea,select', back); if(f && !opts.noFocus && window.innerWidth > 700) f.focus();
+  return back.firstChild;
+}
+function closeModal(){ if(modalOpen){ modalOpen.remove(); modalOpen = null; } document.body.style.overflow = ''; }
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+function confirmBox(title, text, okLabel, danger){
+  return new Promise(function(res){
+    var m = openModal('<h3>'+esc(title)+'</h3><p class="muted" style="margin:6px 0 20px">'+esc(text)+'</p><div class="row" style="justify-content:flex-end"><button class="btn" data-no>Cancel</button><button class="btn '+(danger?'danger':'primary')+'" data-yes>'+esc(okLabel||'Confirm')+'</button></div>', {noFocus:true});
+    m.addEventListener('click', function(e){ if(e.target.closest('[data-yes]')){ closeModal(); res(true); } else if(e.target.closest('[data-no],[data-close]')){ closeModal(); res(false); } });
+  });
+}
+function busy(btn, on, label){
+  if(!btn) return;
+  if(on){ btn.dataset.old = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="spin"></span>' + (label ? ' ' + esc(label) : ''); }
+  else { btn.disabled = false; if(btn.dataset.old != null){ btn.innerHTML = btn.dataset.old; delete btn.dataset.old; } }
+}
+async function withBusy(btn, label, fn){ busy(btn, true, label); try { return await fn(); } finally { busy(btn, false); } }
+
+/* ============================================================
+   Backend config (public values only)
+   ============================================================ */
+function getCfg(){
+  if(S.cfg) return Promise.resolve(S.cfg);
+  if(!S.cfgP){
+    S.cfgP = (async function(){
+      var last;
+      for(var i=0;i<4;i++){
+        try {
+          var ctl = new AbortController(); var t = setTimeout(function(){ ctl.abort(); }, 45000);
+          var r = await fetch(API + '/api/config/public', {signal: ctl.signal}); clearTimeout(t);
+          if(r.ok){ S.cfg = await r.json(); return S.cfg; }
+          last = new Error('config ' + r.status);
+        } catch(e){ last = e; }
+        await sleep(2500);
+      }
+      S.cfgP = null; throw last || new Error('config failed');
+    })();
+  }
+  return S.cfgP;
+}
+
+/* ============================================================
+   Sign-in session (direct calls to Supabase Auth, no extra library)
+   ============================================================ */
+var SKEY = 'mdk_session_v1';
+function loadSession(){ try { var s = JSON.parse(localStorage.getItem(SKEY)||'null'); if(s && s.access_token && s.refresh_token) return s; } catch(e){} return null; }
+function saveSession(s){ S.session = s; try { if(s){ localStorage.setItem(SKEY, JSON.stringify(s)); localStorage.setItem('mdk_known', '1'); } else localStorage.removeItem(SKEY); } catch(e){} }
+async function sb(path, method, body, token){
+  var cfg = await getCfg();
+  if(!cfg.supabase_url || !cfg.supabase_anon_key) throw new Error('Sign in is not ready yet. Please try again in a moment.');
+  var h = {'Content-Type':'application/json', 'apikey': cfg.supabase_anon_key};
+  if(token) h.Authorization = 'Bearer ' + token;
+  var r = await fetch(cfg.supabase_url.replace(/\/$/,'') + path, {method: method, headers: h, body: body ? JSON.stringify(body) : undefined});
+  var d = null; try { d = await r.json(); } catch(e){}
+  if(!r.ok){ var e2 = new Error((d && (d.error_description || d.msg || d.message)) || 'Request failed'); e2.status = r.status; e2.code = d && (d.error_code || d.code); throw e2; }
+  return d;
+}
+function sessionFrom(d){ return {access_token:d.access_token, refresh_token:d.refresh_token, expires_at: Math.floor(Date.now()/1000) + (d.expires_in||3600)}; }
+async function signIn(email, password){
+  try { var d = await sb('/auth/v1/token?grant_type=password', 'POST', {email: email.trim(), password: password}); saveSession(sessionFrom(d)); return true; }
+  catch(e){
+    if(e.status===400 || e.status===401 || e.status===422) throw new Error('That email or password is not right. Please check and try again.');
+    if(e.status===429) throw new Error('Too many tries. Please wait a few minutes and try again.');
+    throw e;
+  }
+}
+var refreshing = null;
+async function getToken(){
+  var s = S.session || loadSession(); if(!s) return null; S.session = s;
+  if(s.expires_at - Math.floor(Date.now()/1000) > 60) return s.access_token;
+  if(!refreshing){
+    refreshing = (async function(){
+      try { var d = await sb('/auth/v1/token?grant_type=refresh_token', 'POST', {refresh_token: s.refresh_token}); saveSession(sessionFrom(d)); return S.session.access_token; }
+      catch(e){ if(e.status && e.status < 500){ saveSession(null); return null; } return s.access_token; }
+      finally { refreshing = null; }
+    })();
+  }
+  return refreshing;
+}
+function signOut(msg){
+  saveSession(null); S.me = null; S.bill = null; clearTimers(); closeModal();
+  try { localStorage.removeItem('mdk_push_on'); } catch(e){}
+  if(msg) { try { sessionStorage.setItem('mdk_msg', msg); } catch(e){} }
+  location.href = '/';
+}
+
+/* ============================================================
+   Backend calls
+   ============================================================ */
+async function api(path, o){
+  o = o || {}; var method = o.method || 'GET'; var headers = {};
+  if(o.auth !== false){ var t = await getToken(); if(!t){ signOut('Please sign in again.'); throw new Error('Please sign in again.'); } headers.Authorization = 'Bearer ' + t; }
+  var payload;
+  if(o.form) payload = o.form; else if(o.body !== undefined){ headers['Content-Type'] = 'application/json'; payload = JSON.stringify(o.body); }
+  var res, tries = 0;
+  while(true){
+    try {
+      var ctl = new AbortController(); var timer = setTimeout(function(){ ctl.abort(); }, o.timeout || 60000);
+      res = await fetch(API + path, {method: method, headers: headers, body: payload, signal: ctl.signal}); clearTimeout(timer); break;
+    } catch(e){
+      tries++; if(tries >= 2 || method !== 'GET'){ var ne = new Error('We could not reach the server. Check your internet and try again.'); ne.network = true; throw ne; }
+      await sleep(1500);
+    }
+  }
+  if(o.raw) return res;
+  var data = null; try { data = await res.json(); } catch(e){}
+  if(res.status === 401 && o.auth !== false){ signOut('Your session ended. Please sign in again.'); throw new Error('Please sign in again.'); }
+  if(!res.ok){
+    var msg = (data && data.error) || (res.status===429 ? 'Too many tries. Please wait a few minutes and try again.' : 'Something went wrong. Please try again.');
+    var er = new Error(msg); er.status = res.status; er.data = data || {}; throw er;
+  }
+  return data;
+}
+function errText(e){ var t = (e && e.message) || 'Something went wrong. Please try again.'; if(e && e.data && e.data.next_step) t += ' ' + e.data.next_step; return t; }
+
+/* expose to the other script blocks of this same file */
+window.MDK = {API:API, DEMO_CHAT_URL:DEMO_CHAT_URL, $:$, $$:$$, esc:esc, money:money, num:num, sleep:sleep, initials:initials, parseTs:parseTs, fmtTime:fmtTime, fmtDay:fmtDay, ago:ago, hoursLeft:hoursLeft, debounce:debounce,
+  CH:CH, CH_ORDER:CH_ORDER, ico:ico, S:S, addTimer:addTimer, clearTimers:clearTimers, toast:toast, openModal:openModal, closeModal:closeModal, confirmBox:confirmBox, busy:busy, withBusy:withBusy,
+  getCfg:getCfg, sb:sb, signIn:signIn, getToken:getToken, signOut:signOut, saveSession:saveSession, loadSession:loadSession, api:api, errText:errText, views:{}};
+})();
+</script>
+<script>
+(function(){
+'use strict';
+var M = window.MDK, $ = M.$, esc = M.esc, S = M.S, api = M.api;
+
+/* ---------- which top-level area is showing ---------- */
+M.showOnly = function(id){
+  ['boot','gate','dash','screen'].forEach(function(x){ var el = document.getElementById(x); if(el) el.classList.toggle('hidden', x !== id); });
+  window.scrollTo(0, 0);
+};
+M.screenCard = function(html){
+  $('#screen').innerHTML = '<div class="center-screen"><div class="card">' + html + '</div></div>';
+  M.showOnly('screen');
+};
+function brandTop(){ return '<div class="brand" style="justify-content:center"><i></i>MatrixDesk</div>'; }
+M.brandTop = brandTop;
+
+
+/* ---------- the four public pages (privacy, terms, data deletion, contact) live inside this file ---------- */
+var LEGAL = {
+  'privacy': {title: 'Privacy Policy', html:
+    '<h1>Privacy Policy</h1><p class="upd">Last updated: September 2026</p>' +
+    '<p>MatrixDesk is operated by Matrix Route Solution Enterprises (&quot;we&quot;, &quot;us&quot;), based in Ilorin, Kwara State, Nigeria. This policy explains what information we collect when a business uses MatrixDesk, and when a business\'s customers message a MatrixDesk-powered WhatsApp number.</p>' +
+    '<h2>What we collect</h2>' +
+    '<p>From businesses that sign up: business name, contact email, phone number, and the product, pricing and policy information you provide to train your bot.</p>' +
+    '<p>From end customers messaging a connected WhatsApp number: the phone number they message from, and the content of their messages, for the purpose of generating a reply and maintaining conversation history.</p>' +
+    '<h2>How we use it</h2>' +
+    '<p>Message content is sent to our AI provider (Anthropic) solely to generate a reply, and to our knowledge-retrieval provider (Voyage AI) to find relevant business information. We do not sell customer data, and we do not use it for advertising.</p>' +
+    '<h2>Where it\'s stored</h2>' +
+    '<p>Conversation and business data is stored using Supabase, a hosted database provider. Access is restricted to the business that owns that data and to Matrix Route Solution Enterprises for the purpose of operating the service.</p>' +
+    '<h2>Data retention</h2>' +
+    '<p>Conversation history is retained to provide continuity in support conversations. A business can request deletion of their data at any time &mdash; see our <a href="/data-deletion" data-legal="data-deletion">Data Deletion</a> page.</p>' +
+    '<h2>Contact</h2>' +
+    '<p>Questions about this policy can be sent to the address on our <a href="/contact" data-legal="contact">Contact</a> page.</p>'},
+  'terms': {title: 'Terms of Service', html:
+    '<h1>Terms of Service</h1>' +
+    '<p>By using Matrixdeskng.com.ng, you agree to our terms. Our service provides AI support for vendors. Paid plans are via Paystack and non-refundable. You own your business data. Do not use for spam or illegal acts. We may suspend accounts that break rules.</p>'},
+  'data-deletion': {title: 'Data Deletion', html:
+    '<h1>Data Deletion</h1>' +
+    '<p>To delete your data: contact WhatsApp <a href="https://wa.me/2348119578049">08119578049</a>&quot; or email &quot;<a href="mailto:support@matrixdeskng.com.ng">support@matrixdeskng.com.ng</a>&quot; DELETE MY DATA&quot;. Or delete your account in Settings. If you used Facebook Login, remove MatrixdeskNG from Facebook &gt; Settings &gt; Business Integrations. We will delete all your data within 7 days.</p>'},
+  'contact': {title: 'Contact', html:
+    '<h1>Contact</h1>' +
+    '<p>Email: <a href="mailto:support@matrixdeskng.com.ng">support@matrixdeskng.com.ng</a><br>Privacy: <a href="mailto:privacy@matrixdeskng.com.ng">privacy@matrixdeskng.com.ng</a></p>' +
+    '<p>We reply within 48 hour</p>'}
+};
+var forced;   // set only when the browser refuses to change the address (for example inside the Claude app preview)
+function legalKey(){
+  if(typeof forced === 'string') return LEGAL[forced] ? forced : null;
+  var p = location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '').replace(/\/+$/, '');
+  var k = p.replace(/^\//, '');
+  return LEGAL[k] ? k : null;
+}
+M.gateRoute = function(){
+  var k = legalKey(), home = $('#home-sections'), lv = $('#legal-view');
+  if(k){
+    lv.innerHTML = '<article class="legal"><a class="back" href="/" data-home>&larr; Back to MatrixDesk</a>' + LEGAL[k].html + '</article>';
+    home.classList.add('hidden'); lv.classList.remove('hidden');
+    document.title = LEGAL[k].title + ' | MatrixDesk';
+  } else {
+    lv.classList.add('hidden'); lv.innerHTML = ''; home.classList.remove('hidden');
+    document.title = 'MatrixDesk';
+  }
+  window.scrollTo(0, 0);
+};
+document.addEventListener('click', function(e){
+  var g = $('#gate'); if(!g || g.classList.contains('hidden')) return;
+  if(e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+  var a = e.target.closest('a[data-legal], a[data-home], a.brand');
+  if(!a) return;
+  var key = a.dataset.legal || '', to = key ? '/' + key : '/';
+  e.preventDefault();
+  try { history.pushState(null, '', to); forced = undefined; }
+  catch(x){ forced = key; }   // address cannot change here, so still show the page
+  M.gateRoute();
+});
+window.addEventListener('popstate', function(){ forced = undefined; var g = $('#gate'); if(g && !g.classList.contains('hidden')) M.gateRoute(); });
+
+/* ---------- public page ---------- */
+M.gateInit = function(){
+  M.showOnly('gate'); M.gateRoute();
+  var logged = !!(S.session || M.loadSession());
+  if(logged){
+    var b = $('#g-connect-top'); b.textContent = 'Open dashboard'; b.dataset.act = 'dash';
+    var s = $('#g-signin-top'); if(s) s.classList.add('hidden');
+  } else {
+    var known = false; try { known = localStorage.getItem('mdk_known') === '1'; } catch(e){}
+    if(known){
+      var b2 = $('#g-connect-top'); b2.textContent = 'Sign in'; b2.dataset.act = 'signin';
+      var s2 = $('#g-signin-top'); if(s2) s2.classList.add('hidden');
+      var hl = $('#g-signin-line'); if(hl) hl.classList.add('strong');
+    }
+  }
+  var note = null; try { note = sessionStorage.getItem('mdk_msg'); sessionStorage.removeItem('mdk_msg'); } catch(e){}
+  if(note) M.toast(note);
+  // price from the backend (never blocks the page)
+  api('/api/prepay/info', {auth:false}).then(function(d){
+    if(d && d.total_fee_ngn){ $('#g-price').innerHTML = M.money(d.total_fee_ngn) + '<small>one-time</small>'; S.prepay = d; }
+  }).catch(function(){});
+  var q = new URLSearchParams(location.search);
+  if(q.get('auth') === 'signup') openAuth('signup'); else if(q.get('auth') === 'signin') openAuth('signin');
+};
+
+document.addEventListener('click', function(e){
+  var a = e.target.closest('[data-act]'); if(!a || !$('#gate') || $('#gate').classList.contains('hidden')) return;
+  var act = a.dataset.act;
+  if(act === 'signin') openAuth('signin');
+  else if(act === 'signup') openAuth('signup');
+  else if(act === 'prepay') openPrepay();
+  else if(act === 'dash') location.href = '/dashboard';
+  else if(act === 'chat'){ if(M.DEMO_CHAT_URL) window.open(M.DEMO_CHAT_URL, '_blank', 'noopener'); else openAuth('signup'); }
+  else if(act === 'how'){ var h = $('#how'); if(h) h.scrollIntoView({behavior:'smooth', block:'start'}); }
+});
+
+/* ---------- sign in / create account / forgot password ---------- */
+function passField(id, ph, auto){
+  return '<div class="pass"><input class="inp" id="'+id+'" type="password" placeholder="'+ph+'" autocomplete="'+auto+'" required><button type="button" data-show="'+id+'">Show</button></div>';
+}
+function authShell(tab){
+  return '<div style="text-align:center;margin-bottom:16px">'+brandTop()+'</div>' +
+    '<div class="tabs" role="tablist"><button role="tab" data-tab="signin" class="'+(tab==='signin'?'on':'')+'">Sign in</button><button role="tab" data-tab="signup" class="'+(tab==='signup'?'on':'')+'">Create account</button></div><div id="auth-body"></div>';
+}
+function signinForm(){
+  return '<form id="f-signin" novalidate>' +
+    '<div class="field"><label class="f" for="si-email">Email</label><input class="inp" id="si-email" type="email" inputmode="email" autocomplete="email" placeholder="you@business.com" required></div>' +
+    '<div class="field"><label class="f" for="si-pass">Password</label>'+passField('si-pass','Your password','current-password')+'</div>' +
+    '<div class="err hidden" id="si-err" role="alert"></div>' +
+    '<button class="btn primary block" type="submit" style="margin-top:6px">Sign in</button>' +
+    '<p style="text-align:center;margin-top:14px"><button type="button" class="linkbtn" data-forgot>Forgot your password?</button></p></form>';
+}
+function signupForm(){
+  return '<form id="f-signup" novalidate>' +
+    '<div class="field"><label class="f" for="su-biz">Business name</label><input class="inp" id="su-biz" autocomplete="organization" placeholder="e.g. Ada\'s Fashion House" required maxlength="120"></div>' +
+    '<div class="field"><label class="f" for="su-name">Your full name</label><input class="inp" id="su-name" autocomplete="name" placeholder="Your name" required maxlength="120"></div>' +
+    '<div class="field"><label class="f" for="su-email">Email</label><input class="inp" id="su-email" type="email" inputmode="email" autocomplete="email" placeholder="you@business.com" required></div>' +
+    '<div class="field"><label class="f" for="su-phone">WhatsApp number</label><input class="inp" id="su-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 0803 123 4567" required></div>' +
+    '<div class="field"><label class="f" for="su-pass">Password</label>'+passField('su-pass','At least 8 characters','new-password')+'</div>' +
+    '<div class="err hidden" id="su-err" role="alert"></div>' +
+    '<button class="btn primary block" type="submit" style="margin-top:6px">Create my account</button>' +
+    '<p class="hint" style="text-align:center;margin-top:12px">By continuing you agree to our <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.</p>' +
+    '</form>';
+}
+function openAuth(tab){
+  var m = M.openModal(authShell(tab));
+  var body = $('#auth-body', m);
+  function render(t){
+    $$tabs(m).forEach(function(b){ b.classList.toggle('on', b.dataset.tab === t); });
+    body.innerHTML = t === 'signin' ? signinForm() : signupForm();
+    var f = $('input', body); if(f && window.innerWidth > 700) f.focus();
+  }
+  function $$tabs(root){ return Array.prototype.slice.call(root.querySelectorAll('[data-tab]')); }
+  render(tab);
+  m.addEventListener('click', function(e){
+    var t = e.target.closest('[data-tab]'); if(t){ render(t.dataset.tab); return; }
+    var sh = e.target.closest('[data-show]'); if(sh){ var inp = document.getElementById(sh.dataset.show); inp.type = inp.type === 'password' ? 'text' : 'password'; sh.textContent = inp.type === 'password' ? 'Show' : 'Hide'; return; }
+    if(e.target.closest('[data-forgot]')){ forgot(m); return; }
+    if(e.target.closest('[data-prepay]')){ openPrepay(); return; }
+  });
+  m.addEventListener('submit', async function(e){
+    e.preventDefault();
+    if(e.target.id === 'f-signin') doSignin(e.target);
+    else if(e.target.id === 'f-signup') doSignup(e.target, m);
+  });
+}
+M.openAuth = openAuth;
+
+function showErr(id, msg){ var el = document.getElementById(id); if(!el) return; el.textContent = msg || ''; el.classList.toggle('hidden', !msg); }
+async function doSignin(form){
+  var email = $('#si-email').value.trim(), pass = $('#si-pass').value;
+  showErr('si-err', '');
+  if(!email || email.indexOf('@') < 0){ showErr('si-err', 'Please enter your email address.'); return; }
+  if(!pass){ showErr('si-err', 'Please enter your password.'); return; }
+  var btn = $('button[type=submit]', form);
+  try { await M.withBusy(btn, 'Signing in', function(){ return M.signIn(email, pass); }); var after = null; try { after = sessionStorage.getItem('mdk_after'); sessionStorage.removeItem('mdk_after'); } catch(x){} location.href = after || '/dashboard'; }
+  catch(e){ showErr('si-err', e.message); }
+}
+async function doSignup(form, modal){
+  var biz = $('#su-biz').value.trim(), name = $('#su-name').value.trim(), email = $('#su-email').value.trim(), phone = $('#su-phone').value.trim(), pass = $('#su-pass').value;
+  showErr('su-err', '');
+  if(!biz){ showErr('su-err', 'Please enter your business name.'); return; }
+  if(!name){ showErr('su-err', 'Please enter your full name.'); return; }
+  if(!email || email.indexOf('@') < 0){ showErr('su-err', 'Please enter a valid email address.'); return; }
+  if(phone.replace(/\D/g,'').length < 10){ showErr('su-err', 'Please enter your WhatsApp number, for example 0803 123 4567.'); return; }
+  if(pass.length < 8){ showErr('su-err', 'Your password needs at least 8 characters.'); return; }
+  var btn = $('button[type=submit]', form), res;
+  try {
+    res = await M.withBusy(btn, 'Creating your account', function(){
+      return api('/api/register', {method:'POST', auth:false, body:{business_name:biz, owner_full_name:name, email:email, password:pass, phone:phone, admin_whatsapp:phone}});
+    });
+  } catch(e){ showErr('su-err', M.errText(e)); return; }
+  try { await M.signIn(email, pass); } catch(e){ /* they can sign in manually */ }
+  var link = res.payment_link, fee = res.fee || {};
+  var due = res.amount || fee.balance_left_ngn || 0;
+  var title = res.status === 'active' ? 'Your account is ready' : 'Account created';
+  var html = '<div style="text-align:center"><div class="ico ok" style="margin:0 auto 12px;background:rgba(16,185,129,.18);color:var(--emerald2);width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center">'+M.ico('check')+'</div>' +
+    '<h3>'+esc(title)+'</h3><p class="muted" style="margin:8px 0 20px">'+esc(res.message || '')+'</p>';
+  if(link && res.status !== 'active') html += '<a class="btn warn block" href="'+esc(link)+'">Pay '+M.money(due)+' now</a><p style="margin:12px 0 0"><a class="linkbtn" href="/dashboard">Go to my dashboard first</a></p>';
+  else html += '<a class="btn primary block" href="/dashboard">Open my dashboard</a>';
+  html += '</div>';
+  M.openModal(html, {sticky:true, noFocus:true});
+}
+function forgot(m){
+  var body = $('#auth-body', m);
+  body.innerHTML = '<form id="f-forgot" novalidate><p class="muted" style="margin-bottom:14px">Enter your email and we will send you a link to choose a new password.</p>' +
+    '<div class="field"><label class="f" for="fp-email">Email</label><input class="inp" id="fp-email" type="email" inputmode="email" autocomplete="email" placeholder="you@business.com" required></div>' +
+    '<div class="err hidden" id="fp-err" role="alert"></div><button class="btn primary block" type="submit">Send reset link</button>' +
+    '<p style="text-align:center;margin-top:14px"><button type="button" class="linkbtn" data-tab="signin">Back to sign in</button></p></form>';
+  $('#fp-email', body).focus();
+  $('#f-forgot', body).addEventListener('submit', async function(e){
+    e.preventDefault(); var email = $('#fp-email').value.trim(); showErr('fp-err', '');
+    if(!email || email.indexOf('@') < 0){ showErr('fp-err', 'Please enter your email address.'); return; }
+    var btn = $('button[type=submit]', e.target);
+    try { await M.withBusy(btn, 'Sending', function(){ return M.sb('/auth/v1/recover?redirect_to=' + encodeURIComponent(location.origin + '/'), 'POST', {email: email}); }); }
+    catch(er){ if(er.status === 429){ showErr('fp-err', 'Please wait a minute before asking for another link.'); return; } }
+    body.innerHTML = '<div style="text-align:center;padding:10px 0"><h3>Check your email</h3><p class="muted" style="margin:8px 0 18px">If there is an account for that email, we have sent a link to choose a new password. It can take a minute to arrive. Check your spam folder too.</p><button class="btn block" data-tab="signin">Back to sign in</button></div>';
+  });
+}
+
+/* ---------- part payment before registering ---------- */
+async function openPrepay(){
+  var info = S.prepay;
+  if(!info){ try { info = S.prepay = await api('/api/prepay/info', {auth:false}); } catch(e){ M.toast(M.errText(e), 'bad'); return; } }
+  var m = M.openModal('<h3>Pay part of the fee first</h3><p class="muted" style="margin:6px 0 16px">Pay ' + M.money(info.part_payment_ngn) + ' now and the remaining ' + M.money(info.balance_after_part_ngn) + ' later. After paying, create your account with <b>the same phone number</b> and your payment is linked to it. You can add products and train your AI straight away.</p>' +
+    '<form id="f-prepay" novalidate><div class="field"><label class="f" for="pp-name">Your name</label><input class="inp" id="pp-name" autocomplete="name" placeholder="Your name"></div>' +
+    '<div class="field"><label class="f" for="pp-phone">WhatsApp number</label><input class="inp" id="pp-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 0803 123 4567" required></div>' +
+    '<div class="field"><label class="f" for="pp-email">Email</label><input class="inp" id="pp-email" type="email" inputmode="email" autocomplete="email" placeholder="you@business.com" required></div>' +
+    '<div class="err hidden" id="pp-err" role="alert"></div><button class="btn warn block" type="submit">Pay ' + M.money(info.part_payment_ngn) + ' now</button></form>');
+  $('#f-prepay', m).addEventListener('submit', async function(e){
+    e.preventDefault(); showErr('pp-err', '');
+    var name = $('#pp-name').value.trim(), phone = $('#pp-phone').value.trim(), email = $('#pp-email').value.trim();
+    if(phone.replace(/\D/g,'').length < 10){ showErr('pp-err', 'Please enter your WhatsApp number.'); return; }
+    if(!email || email.indexOf('@') < 0){ showErr('pp-err', 'Please enter a valid email address.'); return; }
+    try {
+      var d = await M.withBusy($('button[type=submit]', e.target), 'Opening payment', function(){ return api('/api/prepay/initiate', {method:'POST', auth:false, body:{name:name, phone:phone, email:email}}); });
+      location.href = d.payment_link;
+    } catch(er){ showErr('pp-err', M.errText(er)); }
+  });
+}
+M.openPrepay = openPrepay;
+
+/* ---------- payment return pages ---------- */
+function qp(){ return new URLSearchParams(location.search); }
+M.screens = {};
+M.screens.prepayVerify = async function(){
+  var q = qp(), ref = q.get('tx_ref') || '';
+  M.screenCard(brandTop() + '<h2>Confirming your payment</h2><p class="muted">Please wait a moment. This page updates by itself.</p><div style="margin-top:22px"><span class="spin" style="width:28px;height:28px;border-width:3px"></span></div>');
+  if(q.get('status') === 'cancelled'){
+    M.screenCard(brandTop() + '<h2>Payment cancelled</h2><p class="muted" style="margin:6px 0 20px">No money was taken. You can try again whenever you are ready.</p><a class="btn primary block" href="/?auth=signup">Back to MatrixDesk</a>'); return;
+  }
+  if(!ref){ M.screenCard(brandTop() + '<h2>We could not find that payment</h2><p class="muted" style="margin:6px 0 20px">Open this page from the payment link we sent you, or start again.</p><a class="btn primary block" href="/">Back to MatrixDesk</a>'); return; }
+  for(var i = 0; i < 14; i++){
+    try {
+      var d = await api('/api/prepay/verify?tx_ref=' + encodeURIComponent(ref), {auth:false});
+      if(d.status === 'received'){
+        M.screenCard(brandTop() + '<h2>Part payment received</h2><p class="muted" style="margin:8px 0 6px">We received ' + M.money(d.amount_paid_ngn) + '. The remaining ' + M.money(d.balance_left_ngn) + ' is paid after you create your account.</p><p class="muted" style="margin-bottom:20px">Create your account with <b>the same phone number</b> you paid with.</p><a class="btn primary block" href="/?auth=signup">Create my account</a>'); return;
+      }
+      if(d.status === 'failed'){
+        M.screenCard(brandTop() + '<h2>Payment did not go through</h2><p class="muted" style="margin:8px 0 20px">No money was taken. Please try again.</p><a class="btn primary block" href="/">Back to MatrixDesk</a>'); return;
+      }
+    } catch(e){ if(e.status === 400 || e.status === 404){ M.screenCard(brandTop() + '<h2>We could not find that payment</h2><p class="muted" style="margin:8px 0 20px">'+esc(e.message)+'</p><a class="btn primary block" href="/">Back to MatrixDesk</a>'); return; } }
+    await M.sleep(2500);
+  }
+  M.screenCard(brandTop() + '<h2>Still confirming</h2><p class="muted" style="margin:8px 0 20px">Your bank is taking a little longer. If you were charged, your payment will be linked automatically. Check again in a few minutes.</p><button class="btn primary block" onclick="location.reload()">Check again</button>');
+};
+
+M.screens.billingVerify = async function(){
+  var q = qp(), ref = q.get('tx_ref') || '';
+  if(!(S.session || M.loadSession())){
+    try { sessionStorage.setItem('mdk_after', location.pathname + location.search); } catch(e){}
+    M.gateInit(); M.openAuth('signin'); M.toast('Sign in to see your payment.'); return;
+  }
+  M.screenCard(brandTop() + '<h2>Confirming your payment</h2><p class="muted">Please wait a moment. This page updates by itself.</p><div style="margin-top:22px"><span class="spin" style="width:28px;height:28px;border-width:3px"></span></div>');
+  if(q.get('status') === 'cancelled'){
+    M.screenCard(brandTop() + '<h2>Payment cancelled</h2><p class="muted" style="margin:6px 0 20px">No money was taken.</p><a class="btn primary block" href="/dashboard">Back to my dashboard</a>'); return;
+  }
+  if(!ref){ location.replace('/dashboard'); return; }
+  for(var i = 0; i < 14; i++){
+    try {
+      var d = await api('/api/billing/verify?tx_ref=' + encodeURIComponent(ref));
+      if(d.status === 'successful'){
+        var what = d.kind === 'topup' ? 'Your AI credit has been added to your wallet.' : (d.account_status === 'active' ? 'Your account is fully active. You can now connect your channels.' : 'Your payment has been added to your account.');
+        M.screenCard(brandTop() + '<h2>Payment received</h2><p class="muted" style="margin:8px 0 20px">' + esc(what) + '</p><a class="btn primary block" href="/dashboard">Open my dashboard</a>'); return;
+      }
+      if(d.status === 'needs_refund'){
+        M.screenCard(brandTop() + '<h2>We need to look at this payment</h2><p class="muted" style="margin:8px 0 20px">We received your money but could not apply it to your account. Please contact us and we will sort it out quickly.</p><a class="btn primary block" href="/contact.html">Contact us</a>'); return;
+      }
+    } catch(e){ if(e.status === 404){ M.screenCard(brandTop() + '<h2>We could not find that payment</h2><p class="muted" style="margin:8px 0 20px">Go back to your dashboard and check your wallet.</p><a class="btn primary block" href="/dashboard">Open my dashboard</a>'); return; } }
+    await M.sleep(2500);
+  }
+  M.screenCard(brandTop() + '<h2>Still confirming</h2><p class="muted" style="margin:8px 0 20px">Your bank is taking a little longer. Your dashboard will update once the payment lands.</p><div class="row wrap" style="justify-content:center"><button class="btn" onclick="location.reload()">Check again</button><a class="btn primary" href="/dashboard">Open my dashboard</a></div>');
+};
+
+/* ---------- choose a new password (opened from the email link) ---------- */
+M.screens.recovery = function(hash){
+  var p = new URLSearchParams(hash.replace(/^#/, '')), tok = p.get('access_token');
+  M.screenCard(brandTop() + '<h2>Choose a new password</h2><form id="f-newpass" novalidate style="text-align:left;margin-top:18px"><div class="field"><label class="f" for="np1">New password</label><div class="pass"><input class="inp" id="np1" type="password" autocomplete="new-password" placeholder="At least 8 characters"><button type="button" data-show="np1">Show</button></div></div><div class="err hidden" id="np-err" role="alert"></div><button class="btn primary block" type="submit">Save new password</button></form>');
+  history.replaceState(null, '', location.pathname);
+  $('#screen').addEventListener('click', function(e){ var sh = e.target.closest('[data-show]'); if(sh){ var i = document.getElementById(sh.dataset.show); i.type = i.type === 'password' ? 'text' : 'password'; sh.textContent = i.type === 'password' ? 'Show' : 'Hide'; } });
+  $('#f-newpass').addEventListener('submit', async function(e){
+    e.preventDefault(); var pw = $('#np1').value; showErr('np-err', '');
+    if(pw.length < 8){ showErr('np-err', 'Your password needs at least 8 characters.'); return; }
+    try {
+      await M.withBusy($('button[type=submit]', e.target), 'Saving', function(){ return M.sb('/auth/v1/user', 'PUT', {password: pw}, tok); });
+      M.screenCard(brandTop() + '<h2>Password updated</h2><p class="muted" style="margin:8px 0 20px">You can now sign in with your new password.</p><a class="btn primary block" href="/?auth=signin">Sign in</a>');
+    } catch(er){ showErr('np-err', 'This link has expired. Please ask for a new one from the sign in page.'); }
+  });
+};
+})();
+</script>
+<script>
+(function(){
+'use strict';
+var M = window.MDK, $ = M.$, $$ = M.$$, esc = M.esc, S = M.S, api = M.api, ico = M.ico, CH = M.CH;
+
+/* ============================================================
+   Account state
+   ============================================================ */
+async function loadMe(){ S.me = await api('/api/me'); return S.me; }
+function status(){ return (S.me && S.me.tenant && S.me.tenant.status) || 'locked'; }
+function isActive(){ return status() === 'active'; }
+function canSetup(){ var s = status(); return s === 'active' || s === 'part_paid' || s === 'locked'; }
+function biz(){ return (S.me && S.me.tenant && S.me.tenant.business_name) || 'Your business'; }
+function connectedList(){ var c = (S.me && S.me.connected) || {}; return M.CH_ORDER.filter(function(k){ return c[k]; }); }
+function walletNgn(){ var w = S.me && S.me.wallet; return w ? (w.balance_ngn != null ? w.balance_ngn : (w.balance||0)/100) : 0; }
+function balanceLeft(){ var f = S.me && S.me.fee; return f ? f.balance_left_ngn : 0; }
+
+async function paySetup(btn){
+  try {
+    var d = await M.withBusy(btn, 'Opening payment', function(){ return api('/api/billing/setup', {method:'POST'}); });
+    location.href = d.payment_link;
+  } catch(e){ M.toast(M.errText(e), 'bad'); }
+}
+M.paySetup = paySetup;
+
+function lockedCard(what){
+  var st = status(), left = balanceLeft(), due = st === 'part_paid' ? left : ((S.me && S.me.setup_fee_ngn) || left);
+  var txt = (st === 'part_paid' ? 'Pay the remaining ' : 'Pay the setup fee of ') + M.money(due) + ' to unlock ' + what + '. You can keep adding products and teaching your AI in the meantime.';
+  return '<div class="card warn"><h3>This part is locked</h3><p class="sub" style="margin-bottom:16px">' + esc(txt) + '</p><button class="btn warn" data-pay>Pay ' + M.money(due) + '</button></div>';
+}
+M.lockedCard = lockedCard;
+
+/* ============================================================
+   Navigation model
+   ============================================================ */
+var NAV_ICON = {overview:'home', wallet:'wallet', contacts:'users', products:'box', knowledge:'book', replies:'reply', persona:'spark', channels:'plug', alerts:'bell'};
+var TITLES = {overview:'Overview', wallet:'Wallet', contacts:'Contacts', products:'Products', knowledge:'Knowledge book', replies:'Saved replies', persona:'AI persona', channels:'Channels', alerts:'Alerts'};
+function badgeFor(ch){
+  var s = (S.summary && S.summary[ch]) || null; if(!s) return '';
+  if(s.waiting_handovers) return '<span class="count r">' + s.waiting_handovers + '</span>';
+  if(s.unread_chats) return '<span class="count">' + s.unread_chats + '</span>';
+  return '';
+}
+function waitingTotal(){ var n = 0; Object.keys(S.summary||{}).forEach(function(k){ n += (S.summary[k].waiting_handovers||0); }); return n; }
+function unreadTotal(){ var n = 0; Object.keys(S.summary||{}).forEach(function(k){ n += (S.summary[k].unread_chats||0); }); return n; }
+function link(route, label, icon, extra){
+  return '<a href="#/' + route + '" data-route="' + route + '">' + ico(icon) + '<span>' + esc(label) + '</span>' + (extra||'') + '</a>';
+}
+function navHtml(){
+  var out = '<nav class="nav" aria-label="Main">';
+  out += link('overview', 'Overview', 'home') + link('wallet', 'Wallet', 'wallet');
+  if(isActive()){
+    var cl = connectedList();
+    out += '<div class="nav-g">Inboxes</div>';
+    if(!cl.length) out += '<a href="#/channels" data-route="channels" style="color:var(--dim);font-size:13.5px;font-weight:500">' + ico('info') + '<span>Connect a channel to open its inbox</span></a>';
+    cl.forEach(function(k){ out += link('inbox/' + k, CH[k].inbox, k, badgeFor(k)); });
+  }
+  out += '<div class="nav-g">Your business</div>';
+  if(isActive()) out += link('contacts', 'Contacts', 'users');
+  out += link('products', 'Products', 'box') + link('knowledge', 'Knowledge book', 'book');
+  if(isActive()) out += link('replies', 'Saved replies', 'reply');
+  out += link('persona', 'AI persona', 'spark');
+  out += '<div class="nav-g">Connect</div>' + link('channels', 'Channels', 'plug');
+  if(isActive()){ var w = waitingTotal(); out += link('alerts', 'Alerts', 'bell', w ? '<span class="count r">' + w + '</span>' : ''); }
+  return out + '</nav>';
+}
+function sideHtml(){
+  var st = status(), badge = st === 'active' ? '<span class="badge g">Active</span>' : (st === 'part_paid' ? '<span class="badge a">Part paid</span>' : '<span class="badge r">Not active</span>');
+  return '<div class="biz"><b>' + esc(biz()) + '</b><span>Your workspace</span><div style="margin-top:8px">' + badge + '</div></div>' + navHtml() +
+    '<div class="foot"><button class="btn sm block" data-signout style="margin-bottom:12px">' + ico('logout') + 'Sign out</button>Powered by MatrixDesk</div>';
+}
+
+function renderShell(){
+  var firstInbox = connectedList()[0];
+  var chatRoute = firstInbox ? 'inbox/' + firstInbox : 'channels';
+  $('#dash').innerHTML =
+    '<aside class="side" id="side">' + sideHtml() + '</aside>' +
+    '<div class="mainwrap"><header class="topbar"><button class="back m" id="menu-btn" aria-label="Open menu" style="color:var(--text)">' + ico('menu', ' width="22" height="22"') + '</button><div class="t ellipsis" id="ttl"></div><div class="chipw"><a class="walletchip" id="wchip" href="#/wallet">' + ico('wallet', ' width="16" height="16"') + '<span id="wval"></span></a></div></header>' +
+    '<main id="content" class="content"></main></div>' +
+    '<nav class="bottomnav" aria-label="Quick navigation">' +
+      '<a href="#/overview" data-route="overview">' + ico('home') + 'Home</a>' +
+      '<a href="#/' + chatRoute + '" data-route="inbox" id="bn-chats">' + ico('chat') + 'Chats' + (unreadTotal() ? '<span class="count">' + unreadTotal() + '</span>' : '') + '</a>' +
+      '<a href="#/' + (isActive() ? 'contacts' : 'products') + '" data-route="' + (isActive() ? 'contacts' : 'products') + '">' + ico(isActive() ? 'users' : 'box') + (isActive() ? 'Contacts' : 'Products') + '</a>' +
+      '<a href="#/knowledge" data-route="knowledge">' + ico('book') + 'Teach AI</a>' +
+      '<button id="bn-more" aria-label="More">' + ico('menu') + 'More</button></nav>';
+  updateChip(); markActive();
+}
+function updateChip(){
+  var w = $('#wval'); if(!w) return;
+  w.textContent = money0(walletNgn());
+  $('#wchip').classList.toggle('low', walletNgn() <= 0);
+}
+function money0(n){ return M.money(Math.round(n * 100) / 100); }
+function markActive(){
+  var h = (location.hash || '#/overview').replace(/^#\//, '').split('?')[0];
+  $$('[data-route]').forEach(function(a){
+    var r = a.dataset.route, on = (r === h) || (r === 'inbox' && h.indexOf('inbox/') === 0);
+    a.classList.toggle('on', on);
+  });
+}
+function refreshNav(){
+  var s = $('#side'); if(s) s.innerHTML = sideHtml();
+  var b = $('#bn-chats'); if(b){ var n = unreadTotal(); var c = $('.count', b); if(n){ if(!c){ c = document.createElement('span'); c.className = 'count'; b.appendChild(c); } c.textContent = n; } else if(c) c.remove(); }
+  var d = $('#drawer'); if(d) d.querySelector('.drawer-in').innerHTML = sideHtml();
+  markActive(); updateChip(); updateTitle();
+}
+function updateTitle(){
+  var n = unreadTotal() + waitingTotal();
+  document.title = (n ? '(' + n + ') ' : '') + biz();
+}
+
+/* ---------- mobile menu drawer ---------- */
+function openDrawer(){
+  closeDrawer();
+  var wrap = document.createElement('div'); wrap.id = 'drawer';
+  wrap.innerHTML = '<div class="drawer-back" data-dclose></div><div class="drawer"><div class="drawer-in" style="display:flex;flex-direction:column;flex:1">' + sideHtml() + '</div></div>';
+  document.body.appendChild(wrap);
+  wrap.addEventListener('click', function(e){ if(e.target.closest('[data-dclose]') || e.target.closest('a[data-route]') ) closeDrawer(); });
+}
+function closeDrawer(){ var d = $('#drawer'); if(d) d.remove(); }
+
+document.addEventListener('click', function(e){
+  if(e.target.closest('#menu-btn') || e.target.closest('#bn-more')){ openDrawer(); return; }
+  if(e.target.closest('[data-signout]')){ M.confirmBox('Sign out?', 'You will need your email and password to sign in again.', 'Sign out').then(function(ok){ if(ok) M.signOut(); }); return; }
+  var p = e.target.closest('[data-pay]'); if(p){ paySetup(p); return; }
+});
+
+/* ---------- summary polling (unread markers) ---------- */
+async function loadSummary(){
+  if(!isActive()) return;
+  try { var d = await api('/api/inbox/summary'); S.summary = d.channels || {}; refreshNav(); if(M.onSummary) M.onSummary(); } catch(e){}
+}
+M.loadSummary = loadSummary;
+M.refreshNav = refreshNav;
+M.refreshMe = async function(){ try { await loadMe(); refreshNav(); } catch(e){} };
+
+/* ============================================================
+   Router
+   ============================================================ */
+function parseHash(){
+  var h = (location.hash || '').replace(/^#\/?/, '') || 'overview';
+  var qi = h.indexOf('?'), q = {};
+  if(qi >= 0){ new URLSearchParams(h.slice(qi + 1)).forEach(function(v, k){ q[k] = v; }); h = h.slice(0, qi); }
+  var parts = h.split('/');
+  return {name: parts[0], arg: parts[1] || null, query: q};
+}
+M.go = function(route){ location.hash = '#/' + route; };
+async function route(){
+  closeDrawer(); M.clearTimers(); M.closeModal();
+  var r = parseHash(), old = $('#content'); if(!old) return;
+  var el = old.cloneNode(false); old.parentNode.replaceChild(el, old);   // fresh node, so no click handlers pile up between pages
+  var name = r.name;
+  var needsActive = {inbox:1, contacts:1, replies:1, alerts:1};
+  if(!M.views[name]){ M.go('overview'); return; }
+  S.view = name;
+  $('#ttl').textContent = name === 'inbox' && r.arg && CH[r.arg] ? CH[r.arg].inbox : (TITLES[name] || '');
+  el.className = 'content' + (name === 'inbox' ? ' bleed' : '');
+  markActive();
+  if(needsActive[name] && !isActive()){ el.innerHTML = '<div class="pagehead"><h1>' + esc(TITLES[name] || 'Inbox') + '</h1></div>' + lockedCard('this section'); return; }
+  el.innerHTML = '<div class="grid"><div class="skel" style="height:90px"></div><div class="skel" style="height:160px"></div></div>';
+  window.scrollTo(0, 0);
+  try { await M.views[name](el, r); }
+  catch(e){
+    if(e && e.status === 403 && e.data && e.data.status && e.data.status !== 'active' && e.data.status !== 'part_paid'){ el.innerHTML = lockedCard('this section'); return; }
+    el.innerHTML = '<div class="card"><h3>We could not load this page</h3><p class="sub">' + esc(M.errText(e)) + '</p><button class="btn" onclick="location.reload()">Try again</button></div>';
+  }
+}
+M.route = route;
+
+/* ============================================================
+   Start the dashboard
+   ============================================================ */
+M.dashStart = async function(){
+  M.showOnly('boot');
+  try { await loadMe(); }
+  catch(e){
+    if(e && e.status === 403){ M.screenCard(M.brandTop() + '<h2>No business found for this login</h2><p class="muted" style="margin:8px 0 20px">Please create an account first, or contact us if you think this is a mistake.</p><a class="btn primary block" href="/?auth=signup">Create account</a><p style="margin-top:12px"><button class="linkbtn" data-signout>Sign out</button></p>'); return; }
+    M.screenCard(M.brandTop() + '<h2>We could not open your dashboard</h2><p class="muted" style="margin:8px 0 20px">' + esc(M.errText(e)) + '</p><button class="btn primary block" onclick="location.reload()">Try again</button>'); return;
+  }
+  var st = status();
+  if(st === 'suspended'){ M.screenCard(M.brandTop() + '<h2>Account paused</h2><p class="muted" style="margin:8px 0 20px">Your account is paused. Please contact us so we can help.</p><a class="btn primary block" href="/contact.html">Contact us</a><p style="margin-top:12px"><button class="linkbtn" data-signout>Sign out</button></p>'); return; }
+  renderShell(); M.showOnly('dash'); updateTitle();
+  // deep link from a phone alert: /dashboard?channel=whatsapp&chat=...
+  var q = new URLSearchParams(location.search);
+  if(q.get('channel') && CH[q.get('channel')] && !location.hash){
+    location.hash = '#/inbox/' + q.get('channel') + (q.get('chat') ? '?chat=' + encodeURIComponent(q.get('chat')) : '');
+    history.replaceState(null, '', '/dashboard' + location.hash);
+  } else if(!location.hash){ location.hash = '#/overview'; }
+  window.addEventListener('hashchange', route);
+  window.addEventListener('focus', function(){ loadSummary(); });
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) loadSummary(); });
+  await loadSummary();
+  M.summaryTimer = setInterval(function(){ if(!document.hidden) loadSummary(); }, 30000);
+  route();
+  if(M.pushResume) M.pushResume();
+};
+
+/* ============================================================
+   OVERVIEW
+   ============================================================ */
+M.views.overview = async function(el){
+  var act = isActive(), left = balanceLeft();
+  var p = [api('/api/billing/status').catch(function(){ return null; })];
+  if(act) p.push(api('/api/analytics/overview?days=30').catch(function(){ return null; }));
+  var res = await Promise.all(p), bill = res[0], an = res[1] || null;
+  if(bill && bill.wallet){ S.me.wallet = bill.wallet; updateChip(); }
+  var h = '<div class="pagehead"><h1>' + esc(biz()) + '</h1><p>Here is how your business is doing today.</p></div>';
+  if(!act){
+    var due = status() === 'part_paid' ? left : ((S.me && S.me.setup_fee_ngn) || left), lead = status() === 'part_paid' ? 'Pay the remaining ' : 'Pay the setup fee of ';
+    h += '<div class="banner"><div><b>Finish your setup</b><span class="muted">' + lead + M.money(due) + ' to connect your channels and open your inboxes. You can add products and teach your AI now.</span></div><button class="btn warn" data-pay>Pay ' + M.money(due) + '</button></div>';
+  }
+  h += '<div class="grid stats" style="margin-bottom:14px">' +
+    '<div class="card stat"><div class="k">AI wallet</div><div class="v">' + M.money(walletNgn()) + '</div><div class="n">Pays for your AI replies</div></div>';
+  if(an){
+    h += '<div class="card stat"><div class="k">Messages answered</div><div class="v">' + M.num(an.totals && an.totals.messages) + '</div><div class="n">Last 30 days</div></div>' +
+      '<div class="card stat"><div class="k">Waiting for you</div><div class="v">' + M.num(an.waiting_handovers) + '</div><div class="n">' + (an.waiting_handovers ? '<a href="#/alerts">See who needs you</a>' : 'No one is waiting') + '</div></div>';
+  }
+  h += '</div>';
+
+  var cl = connectedList(), hasProducts = an ? an.total_products > 0 : null, hasDocs = an ? an.total_documents > 0 : null;
+  if(act && (!cl.length || hasProducts === false || hasDocs === false)){
+    h += '<div class="card accent" style="margin-bottom:14px"><h3>Get your AI ready</h3><p class="sub">Three quick steps and your AI is answering customers.</p><div class="list">' +
+      step('box', 'Add your products and prices', hasProducts, '#/products') + step('book', 'Teach it your policies and answers', hasDocs, '#/knowledge') + step('plug', 'Connect WhatsApp, Instagram or Messenger', cl.length > 0, '#/channels') + '</div></div>';
+  }
+  h += '<div class="grid c2">';
+  h += '<div class="card"><h3>Your channels</h3><p class="sub">Each channel has its own separate inbox.</p><div class="list" style="margin:0 -20px -20px">';
+  M.CH_ORDER.forEach(function(k){
+    var c = (S.me.connected || {})[k], nm = (S.me.channels || {})[k] || {}, st = c === 'connected' ? '<span class="badge g"><span class="dot g"></span>Connected</span>' : (c === 'needs_reconnect' ? '<span class="badge a">Needs reconnecting</span>' : '<span class="badge">Not connected</span>');
+    var acct = k === 'whatsapp' && S.me.whatsapp && S.me.whatsapp.phone_number_id ? '' : (nm.account_name ? esc(nm.account_name) : '');
+    h += '<a class="it" href="#/' + (c && act ? 'inbox/' + k : 'channels') + '" style="color:inherit;text-decoration:none"><div class="ico ' + CH[k].short + '">' + ico(k) + '</div><div class="grow"><b>' + CH[k].name + '</b><div class="small muted ellipsis">' + (acct || '&nbsp;') + '</div></div>' + st + '</a>';
+  });
+  h += '</div></div>';
+  if(an && an.daily && an.daily.length){
+    var max = Math.max.apply(null, an.daily.map(function(d){ return d.messages || 0; })) || 1;
+    h += '<div class="card"><h3>Messages, last 30 days</h3><p class="sub">' + M.num(an.totals.messages) + ' answered' + (an.totals.handovers ? ' · ' + M.num(an.totals.handovers) + ' passed to you' : '') + '</p><div class="bars" role="img" aria-label="Messages per day">' +
+      an.daily.map(function(d){ var v = d.messages || 0; return '<i title="' + v + '" style="height:' + Math.max(2, Math.round(v / max * 100)) + '%"></i>'; }).join('') + '</div></div>';
+  } else {
+    h += '<div class="card"><h3>Top up your AI</h3><p class="sub">Your AI uses wallet credit for every reply.</p>' + packs(bill, act) + '</div>';
+  }
+  h += '</div>';
+  if(an && an.daily && an.daily.length){ h += '<div class="card" style="margin-top:14px"><h3>Top up your AI</h3><p class="sub">Your AI uses wallet credit for every reply.</p>' + packs(bill, act) + '</div>'; }
+  el.innerHTML = h;
+  bindPacks(el);
+};
+function step(icon, text, done, href){
+  return '<a class="it" href="' + href + '" style="color:inherit;text-decoration:none"><div class="ico">' + ico(icon) + '</div><div class="grow"><b>' + esc(text) + '</b></div>' + (done ? '<span class="badge g">Done</span>' : '<span class="badge i">Start</span>') + '</a>';
+}
+function packs(bill, act){
+  if(!bill || !bill.packages) return '<p class="muted">Top-up options are not available right now.</p>';
+  if(!act) return '<p class="muted">Top-ups open once your setup fee is fully paid.</p>';
+  return '<div class="pk">' + bill.packages.map(function(p){ return '<button data-topup="' + p.amount_ngn + '"><b>' + M.money(p.amount_ngn) + '</b><span>adds ' + M.money(p.credit_ngn) + ' credit</span></button>'; }).join('') + '</div>';
+}
+function bindPacks(root){
+  $$('[data-topup]', root).forEach(function(b){
+    b.addEventListener('click', async function(){
+      var amt = Number(b.dataset.topup);
+      try { var d = await M.withBusy(b, '', function(){ return api('/api/billing/initiate', {method:'POST', body:{amount: amt}}); }); location.href = d.payment_link; }
+      catch(e){ M.toast(M.errText(e), 'bad'); }
+    });
+  });
+}
+
+/* ============================================================
+   WALLET
+   ============================================================ */
+M.views.wallet = async function(el){
+  var bill = await api('/api/billing/status');
+  S.me.wallet = bill.wallet; updateChip();
+  var act = isActive(), bal = bill.wallet ? (bill.wallet.balance_ngn != null ? bill.wallet.balance_ngn : 0) : 0;
+  var h = '<div class="pagehead"><h1>Wallet</h1><p>Your AI pays for each reply from this balance. When it runs out, your AI cannot reply, so top up before that happens.</p></div>';
+  h += '<div class="card accent" style="margin-bottom:14px"><div class="k muted small" style="font-weight:600">Balance</div><div style="font-family:var(--display);font-size:46px;font-weight:600;letter-spacing:-.02em;margin:4px 0">' + M.money(bal) + '</div>' +
+    '<div class="small muted">Total credit bought: ' + M.money(bill.wallet && bill.wallet.total_purchased_ngn) + '</div></div>';
+  if(!act){
+    h += '<div class="banner"><div><b>Top-ups open after your setup fee is fully paid</b><span class="muted">Remaining: ' + M.money(bill.fee && bill.fee.balance_left_ngn) + '</span></div><button class="btn warn" data-pay>Pay ' + M.money(bill.fee && bill.fee.balance_left_ngn) + '</button></div>';
+  } else {
+    h += '<div class="card" style="margin-bottom:14px"><h3>Top up</h3><p class="sub">Choose an amount. You pay securely with Flutterwave and the credit lands in your wallet in a moment.</p>' + packs(bill, true) + '</div>';
+  }
+  var tx = bill.transactions || [];
+  h += '<div class="card flat"><div style="padding:18px 20px 6px"><h3>Recent payments</h3></div>';
+  if(!tx.length) h += '<div class="empty" style="padding:22px"><p style="margin:0">No payments yet.</p></div>';
+  else h += '<div class="list">' + tx.map(function(t){
+    var kind = {setup:'Setup fee', topup:'Wallet top-up', balance:'Setup balance', prepay:'Part payment'}[t.kind] || 'Payment';
+    var st = t.status === 'successful' ? '<span class="badge g">Paid</span>' : (t.status === 'needs_refund' ? '<span class="badge r">Needs attention</span>' : '<span class="badge a">Pending</span>');
+    return '<div class="it"><div class="grow"><b>' + esc(kind) + '</b><div class="small muted">' + esc(M.fmtDay(t.created_at)) + ', ' + esc(M.fmtTime(t.created_at)) + '</div></div><div style="text-align:right"><b>' + M.money(t.amount_ngn) + '</b><div>' + st + '</div></div></div>';
+  }).join('') + '</div>';
+  h += '</div>';
+  el.innerHTML = h; bindPacks(el);
+};
+
+/* ============================================================
+   CHANNELS
+   ============================================================ */
+var fbReady = false, waInfo = null, waCancel = null;
+function loadFB(cfg){
+  return new Promise(function(res, rej){
+    if(window.FB && fbReady) return res();
+    window.fbAsyncInit = function(){ try { window.FB.init({appId: cfg.meta_app_id, autoLogAppEvents: true, xfbml: false, version: cfg.graph_version || 'v26.0'}); fbReady = true; res(); } catch(e){ rej(e); } };
+    if(document.getElementById('fb-sdk')){ if(window.FB){ window.fbAsyncInit(); } return; }
+    var s = document.createElement('script'); s.id = 'fb-sdk'; s.async = true; s.defer = true; s.crossOrigin = 'anonymous'; s.src = 'https://connect.facebook.net/en_US/sdk.js';
+    s.onerror = function(){ rej(new Error('Facebook could not be loaded. Check your internet and try again.')); };
+    document.head.appendChild(s);
+  });
+}
+window.addEventListener('message', function(ev){
+  if(ev.origin !== 'https://www.facebook.com' && ev.origin !== 'https://web.facebook.com') return;
+  try {
+    var d = typeof ev.data === 'string' ? JSON.parse(ev.data) : ev.data;
+    if(d && d.type === 'WA_EMBEDDED_SIGNUP'){
+      if(String(d.event || '').indexOf('FINISH') === 0) waInfo = d.data || {};
+      else if(d.event === 'CANCEL') waCancel = d.data || {};
+    }
+  } catch(e){}
+});
+
+async function connectWhatsApp(btn){
+  var cfg = await M.getCfg();
+  if(!window.FB || !fbReady){ M.toast('Getting WhatsApp ready. Please tap Connect WhatsApp again in a moment.'); loadFB(cfg).catch(function(e){ M.toast(e.message, 'bad'); }); return; }
+  waInfo = null; waCancel = null;
+  window.FB.login(function(resp){
+    var code = resp && resp.authResponse && resp.authResponse.code;
+    if(!code){ if(waCancel || (resp && !resp.authResponse)) M.toast('WhatsApp connection was cancelled. Tap Connect WhatsApp when you are ready.'); return; }
+    finishWhatsApp(code);
+  }, {config_id: cfg.whatsapp_config_id, response_type: 'code', override_default_response_type: true, extras: cfg.whatsapp_launch_extras || {setup: {}}});
+}
+async function finishWhatsApp(code){
+  var m = M.openModal('<div style="text-align:center;padding:10px 0"><span class="spin" style="width:28px;height:28px;border-width:3px"></span><h3 style="margin-top:16px">Connecting your WhatsApp</h3><p class="muted">This can take up to a minute. Please keep this page open.</p></div>', {sticky:true, noFocus:true});
+  for(var i = 0; i < 70 && !(waInfo && waInfo.waba_id); i++) await M.sleep(300);
+  if(!(waInfo && waInfo.waba_id)){ M.closeModal(); M.toast('We did not receive your WhatsApp details from Meta. Please tap Connect WhatsApp and finish every step.', 'bad'); return; }
+  try {
+    var d = await api('/api/whatsapp/embedded-signup', {method:'POST', timeout:120000, body:{code: code, waba_id: waInfo.waba_id, phone_number_id: waInfo.phone_number_id || ''}});
+    await M.refreshMe();
+    M.openModal('<div style="text-align:center"><div style="margin:0 auto 12px;background:rgba(16,185,129,.18);color:var(--emerald2);width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center">' + ico('check') + '</div><h3>WhatsApp connected</h3><p class="muted" style="margin:8px 0 6px">' + esc(d.display_phone_number || '') + ' is now answering customers.</p>' +
+      (d.keep_app_open ? '<p class="muted" style="margin-bottom:6px">Keep your WhatsApp Business app open on your phone for a while so your chats can sync.</p>' : '') +
+      '<p class="muted" style="margin-bottom:18px">Send a message to this number from another phone to test it.</p><button class="btn primary block" data-close>Done</button></div>', {noFocus:true});
+    if(S.view === 'channels') M.route();
+  } catch(e){
+    var more = '';
+    if(e.data && e.data.choose){ more = '<p class="muted small" style="margin-top:8px">We found these numbers: ' + e.data.choose.map(function(c){ return esc(c.display_phone_number || c.name || c.phone_number_id); }).join(', ') + '. Tap Connect WhatsApp again and choose only one number.</p>'; }
+    M.openModal('<h3>We could not connect WhatsApp</h3><p class="muted" style="margin:8px 0">' + esc(M.errText(e)) + '</p>' + more + '<button class="btn block" style="margin-top:16px" data-close>Close</button>', {noFocus:true});
+  }
+}
+
+M.views.channels = async function(el){
+  if(!isActive()){
+    el.innerHTML = '<div class="pagehead"><h1>Channels</h1><p>Connect WhatsApp, Instagram and Facebook Messenger. Each one gets its own inbox.</p></div>' + lockedCard('channels');
+    return;
+  }
+  var cfg = await M.getCfg().catch(function(){ return {}; });
+  if(cfg.meta_app_id && cfg.whatsapp_config_id) loadFB(cfg).catch(function(){});
+  var r = await Promise.all([api('/api/channels/status'), api('/api/channels/guide').catch(function(){ return {channels:{}}; }), M.refreshMe()]);
+  var st = (r[0] && r[0].channels) || {}, guides = (r[1] && r[1].channels) || {};
+  var h = '<div class="pagehead"><h1>Channels</h1><p>Connect the places your customers message you. Each channel gets its own separate inbox, they never mix.</p></div><div class="stack">';
+  // WhatsApp
+  var wa = S.me.whatsapp, waOn = wa && wa.phone_number_id;
+  h += '<div class="card"><div class="row" style="margin-bottom:10px"><div class="ico wa">' + ico('whatsapp') + '</div><div class="grow"><h3 style="margin:0">WhatsApp</h3></div>' + (waOn ? '<span class="badge g"><span class="dot g"></span>Connected</span>' : '<span class="badge">Not connected</span>') + '</div>';
+  if(waOn){
+    var co = /coexistence/.test(wa.method || '');
+    h += '<p class="sub">Your AI is answering customers on your WhatsApp number.' + (co ? ' This number also keeps working in your WhatsApp Business app.' : '') + '</p><div class="row wrap"><a class="btn" href="#/inbox/whatsapp">Open WhatsApp inbox</a><button class="btn danger" data-disc="whatsapp">Disconnect</button></div>';
+  } else {
+    h += '<p class="sub">Use your own WhatsApp number. You can keep using the WhatsApp Business app on your phone at the same time.</p>' +
+      '<ul class="steps2"><li class="current"><span class="m">1</span><div><b>Tap Connect WhatsApp</b><span>A Facebook window opens. Log in and choose your business.</span></div></li><li><span class="m">2</span><div><b>Choose or add your number</b><span>Follow the steps in the window until it says you are done.</span></div></li><li><span class="m">3</span><div><b>Send a test message</b><span>Message your number from another phone. Your AI replies in about a minute.</span></div></li></ul>' +
+      (cfg.whatsapp_available === false ? '<p class="err">Connecting WhatsApp is not available yet. Please contact us.</p>' : '<button class="btn good" data-wa style="margin-top:16px">' + ico('whatsapp') + 'Connect WhatsApp</button>');
+  }
+  h += '</div>';
+  // Instagram + Facebook
+  ['instagram', 'facebook'].forEach(function(k){
+    var c = st[k] || {}, g = guides[k] || {}, state = c.state || 'not_connected', on = state === 'connected' || state === 'live';
+    var badge = on ? '<span class="badge g"><span class="dot g"></span>' + (state === 'live' ? 'Live' : 'Connected') + '</span>' : (state === 'needs_reconnect' ? '<span class="badge a">Needs reconnecting</span>' : (state === 'unavailable' ? '<span class="badge">Not available yet</span>' : '<span class="badge">Not connected</span>'));
+    h += '<div class="card"><div class="row" style="margin-bottom:10px"><div class="ico ' + CH[k].short + '">' + ico(k) + '</div><div class="grow"><h3 style="margin:0">' + CH[k].name + '</h3>' + (c.account_name ? '<div class="small muted">' + esc(c.account_name) + '</div>' : '') + '</div>' + badge + '</div>';
+    h += '<p class="sub">' + esc(c.message || g.intro || '') + '</p>';
+    if(state === 'choose_page' && c.pages){
+      h += '<div class="stack" style="margin-bottom:6px">' + c.pages.map(function(p){ return '<button class="btn block" data-page="' + esc(p.id) + '">' + esc(p.name || p.id) + '</button>'; }).join('') + '</div>';
+    } else {
+      if(!on && state !== 'unavailable' && g.before_you_start){
+        h += '<details class="fold" open><summary>Before you start</summary><ul class="steps2" style="margin-top:0">' + g.before_you_start.map(function(s, i){ return '<li><span class="m">' + (i + 1) + '</span><div><b>' + esc(s.title) + '</b><span>' + esc(s.how) + '</span></div></li>'; }).join('') + '</ul></details>';
+      }
+      if(c.steps && c.steps.length && !on){
+        h += '<ul class="steps2">' + c.steps.map(function(s){ return '<li class="' + esc(s.state) + '"><span class="m">' + (s.state === 'done' ? '✓' : s.number) + '</span><div><b>' + esc(s.title) + '</b><span>' + esc(s.help) + '</span></div></li>'; }).join('') + '</ul>';
+      }
+      h += '<div class="row wrap" style="margin-top:16px">';
+      if(state !== 'unavailable') h += '<button class="btn ' + (on ? '' : 'primary') + '" data-conn="' + k + '">' + (on ? 'Reconnect ' : (state === 'needs_reconnect' ? 'Reconnect ' : 'Connect ')) + CH[k].name + '</button>';
+      if(on) h += '<a class="btn" href="#/inbox/' + k + '">Open inbox</a>';
+      if(on || state === 'needs_reconnect') h += '<button class="btn danger" data-disc="' + k + '">Disconnect</button>';
+      h += '</div>';
+      if(state === 'live' || state === 'connected'){ h += '<p class="hint" style="margin-top:10px">' + (state === 'live' ? 'Your AI is answering messages.' : 'Send a message from another account to test it.') + '</p>'; }
+      if(g.troubleshooting && g.troubleshooting.length){
+        h += '<details class="fold"><summary>Something not working?</summary>' + g.troubleshooting.map(function(t){ return '<p><b>' + esc(t.problem) + '</b><br>' + esc(t.fix) + '</p>'; }).join('') + '</details>';
+      }
+    }
+    h += '</div>';
+  });
+  h += '</div>';
+  el.innerHTML = h;
+  el.onclick = async function(e){
+    var b;
+    if((b = e.target.closest('[data-wa]'))){ connectWhatsApp(b); return; }
+    if((b = e.target.closest('[data-conn]'))){
+      var k = b.dataset.conn;
+      try { var d = await M.withBusy(b, 'Opening ' + CH[k].name, function(){ return api('/api/channels/' + k + '/start'); }); try { sessionStorage.setItem('mdk_connecting', k); } catch(x){} location.href = d.url; }
+      catch(er){ M.toast(M.errText(er), 'bad'); }
+      return;
+    }
+    if((b = e.target.closest('[data-page]'))){
+      try { var r2 = await M.withBusy(b, 'Connecting', function(){ return api('/api/channels/facebook/select-page', {method:'POST', body:{page_id: b.dataset.page}}); }); M.toast((r2.message || 'Facebook connected') + '. ' + (r2.next_step || ''), 'good'); await M.refreshMe(); M.route(); }
+      catch(er2){ M.toast(M.errText(er2), 'bad'); }
+      return;
+    }
+    if((b = e.target.closest('[data-disc]'))){
+      var ch = b.dataset.disc;
+      var ok = await M.confirmBox('Disconnect ' + CH[ch].name + '?', 'Your AI will stop answering messages on ' + CH[ch].name + '. Your chats and contacts stay saved. You can connect again any time.', 'Disconnect', true);
+      if(!ok) return;
+      try { await api(ch === 'whatsapp' ? '/api/whatsapp/disconnect' : '/api/channels/' + ch + '/disconnect', {method:'POST'}); M.toast(CH[ch].name + ' disconnected.', 'good'); await M.refreshMe(); renderShell(); M.route(); }
+      catch(er3){ M.toast(M.errText(er3), 'bad'); }
+    }
+  };
+};
+
+/* ============================================================
+   Return from Instagram / Facebook login: /connect/instagram?code=...&state=...
+   ============================================================ */
+M.screens.connect = async function(channel){
+  var q = new URLSearchParams(location.search), name = CH[channel] ? CH[channel].name : channel;
+  if(!(S.session || M.loadSession())){ try { sessionStorage.setItem('mdk_after', location.pathname + location.search); } catch(x){} M.gateInit(); M.openAuth('signin'); M.toast('Sign in to finish connecting ' + name + '.'); return; }
+  M.screenCard(M.brandTop() + '<h2>Connecting ' + esc(name) + '</h2><p class="muted">Please wait a moment.</p><div style="margin-top:22px"><span class="spin" style="width:28px;height:28px;border-width:3px"></span></div>');
+  var back = '<a class="btn primary block" href="/dashboard#/channels">Back to channels</a>';
+  if(q.get('error') || q.get('error_reason')){
+    M.screenCard(M.brandTop() + '<h2>' + esc(name) + ' was not connected</h2><p class="muted" style="margin:8px 0 20px">You did not allow access, so nothing was connected. Tap Connect ' + esc(name) + ' and allow every question to try again.</p>' + back); return;
+  }
+  var code = q.get('code'), state = q.get('state');
+  if(!code || !state){ M.screenCard(M.brandTop() + '<h2>This link has expired</h2><p class="muted" style="margin:8px 0 20px">Go to Channels and tap Connect ' + esc(name) + ' to start again.</p>' + back); return; }
+  try {
+    var d = await api('/api/channels/' + channel + '/connect', {method:'POST', timeout:90000, body:{code: code, state: state}});
+    if(d.status === 'choose_page'){ location.replace('/dashboard#/channels'); return; }
+    M.screenCard(M.brandTop() + '<div style="margin:16px auto 0;background:rgba(16,185,129,.18);color:var(--emerald2);width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center">' + ico('check') + '</div><h2>' + esc(name) + ' connected</h2><p class="muted" style="margin:8px 0 20px">' + esc((d.account_name ? d.account_name + '. ' : '') + (d.next_step || '')) + '</p>' + back);
+  } catch(e){
+    M.screenCard(M.brandTop() + '<h2>We could not connect ' + esc(name) + '</h2><p class="muted" style="margin:8px 0 20px">' + esc(M.errText(e)) + '</p>' + back);
+  }
+};
+M.renderShell = renderShell; M.status = status; M.isActive = isActive; M.canSetup = canSetup; M.biz = biz; M.connectedList = connectedList; M.walletNgn = walletNgn;
+})();
+</script>
+<script>
+(function(){
+'use strict';
+var M = window.MDK, $ = M.$, $$ = M.$$, esc = M.esc, S = M.S, api = M.api, ico = M.ico, CH = M.CH;
+
+M.views.inbox = async function(el, r){
+  var ch = r.arg, cl = M.connectedList();
+  if(!CH[ch] || cl.indexOf(ch) < 0){
+    el.className = 'content';
+    el.innerHTML = '<div class="empty card"><h3>' + (CH[ch] ? CH[ch].name + ' is not connected yet' : 'Choose an inbox') + '</h3><p>Connect it first, then its chats appear here in their own inbox.</p><a class="btn primary" href="#/channels">Go to Channels</a></div>';
+    return;
+  }
+  var st = {ch: ch, threads: [], filter: 'all', q: '', sel: null, data: null, replies: null, gen: 0, lastSig: '', sending: false};
+  var needsFix = (S.me.connected || {})[ch] === 'needs_reconnect';
+
+  el.innerHTML =
+    '<div class="inbox" id="ib">' +
+      '<section class="ib-list" id="ib-list"><div class="ib-head"><div class="seg" id="ib-sw"></div>' +
+        '<input class="inp" id="ib-search" type="search" placeholder="Search ' + esc(CH[ch].name) + ' chats" aria-label="Search chats" style="min-height:42px">' +
+        '<div class="seg" id="ib-filters"></div></div>' +
+        (needsFix ? '<div class="notice a"><span>' + esc(CH[ch].name) + ' stopped working. Reconnect it to keep replying.</span><a class="btn sm warn" href="#/channels">Reconnect</a></div>' : '') +
+        '<div class="scroll" id="ib-rows"><div style="padding:14px"><div class="skel" style="height:64px;margin-bottom:10px"></div><div class="skel" style="height:64px;margin-bottom:10px"></div><div class="skel" style="height:64px"></div></div></div></section>' +
+      '<section class="ib-thread pane-hide" id="ib-thread"></section>' +
+      '<aside class="ib-cust" id="ib-cust"></aside>' +
+    '</div>';
+  var root = $('#ib', el);
+
+  /* ---------- channel switcher: each channel is its own inbox ---------- */
+  $('#ib-sw', el).innerHTML = cl.map(function(k){
+    var s = (S.summary && S.summary[k]) || {}, n = (s.waiting_handovers || 0) + (s.unread_chats || 0);
+    return '<a class="chip ' + (k === ch ? 'on' : '') + '" href="#/inbox/' + k + '">' + ico(k, ' width="15" height="15"') + esc(CH[k].name) + (n ? ' <span class="count' + (s.waiting_handovers ? ' r' : '') + '" style="height:18px;min-width:18px;font-size:11px">' + n + '</span>' : '') + '</a>';
+  }).join('');
+
+  /* ---------- list ---------- */
+  function sig(t){ return t.customer_phone + '|' + t.last_at + '|' + t.unread + '|' + t.needs_human + '|' + t.ai_paused + '|' + (t.name || ''); }
+  function filtered(){
+    var q = st.q.trim().toLowerCase();
+    return st.threads.filter(function(t){
+      if(st.filter === 'unread' && !t.unread) return false;
+      if(st.filter === 'waiting' && !t.needs_human) return false;
+      if(q && (String(t.label || '') + ' ' + String(t.last_message || '') + ' ' + String(t.phone || '')).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+  function renderFilters(){
+    var un = st.threads.filter(function(t){ return t.unread; }).length, nh = st.threads.filter(function(t){ return t.needs_human; }).length;
+    $('#ib-filters', el).innerHTML =
+      '<button class="chip ' + (st.filter === 'all' ? 'on' : '') + '" data-f="all">All</button>' +
+      '<button class="chip ' + (st.filter === 'unread' ? 'on' : '') + '" data-f="unread">Unread' + (un ? ' · ' + un : '') + '</button>' +
+      '<button class="chip ' + (st.filter === 'waiting' ? 'on' : '') + '" data-f="waiting">Needs you' + (nh ? ' · ' + nh : '') + '</button>';
+  }
+  function renderRows(){
+    var rows = filtered(), box = $('#ib-rows', el), top = box.scrollTop;
+    if(!st.threads.length){ box.innerHTML = '<div class="empty"><h3>No chats yet</h3><p>When a customer messages your ' + esc(CH[ch].name) + ', the chat shows up here.</p></div>'; return; }
+    if(!rows.length){ box.innerHTML = '<div class="empty"><p>No chats match.</p></div>'; return; }
+    box.innerHTML = rows.map(function(t){
+      var on = t.customer_phone === st.sel, preview = (t.last_direction === 'out' ? (t.last_sender === 'vendor' ? 'You: ' : 'AI: ') : '') + (t.last_message || '');
+      return '<button class="th ' + (on ? 'on ' : '') + (t.unread ? 'unread' : '') + '" data-chat="' + esc(t.customer_phone) + '">' +
+        '<div class="av ' + CH[ch].short + '">' + esc(M.initials(t.label)) + '</div>' +
+        '<div class="grow"><div class="row between"><span class="nm ellipsis">' + esc(t.label) + '</span><span class="tm">' + esc(M.ago(t.last_at)) + '</span></div>' +
+        '<div class="pv">' + esc(preview) + '</div>' +
+        '<div class="row wrap" style="margin-top:5px;gap:6px">' + (t.needs_human ? '<span class="badge r">Needs you</span>' : '') + (t.ai_paused && !t.needs_human ? '<span class="badge a">AI paused</span>' : '') + (t.lead_stage === 'ready_to_buy' ? '<span class="badge g">Ready to buy</span>' : '') + (t.unread ? '<span class="count" style="margin-left:auto">' + t.unread + '</span>' : '') + '</div></div></button>';
+    }).join('');
+    box.scrollTop = top;
+  }
+  async function loadList(first){
+    try {
+      var d = await api('/api/inbox/list?channel=' + ch);
+      var s = d.threads.map(sig).join(';');
+      if(s !== st.lastSig || first){ st.lastSig = s; st.threads = d.threads; renderFilters(); renderRows(); }
+      if(st.sel){ var cur = st.threads.filter(function(t){ return t.customer_phone === st.sel; })[0]; if(cur && cur.unread && st.data) { markRead(st.sel); } }
+    } catch(e){ if(first) $('#ib-rows', el).innerHTML = '<div class="empty"><h3>We could not load your chats</h3><p>' + esc(M.errText(e)) + '</p><button class="btn" id="ib-retry">Try again</button></div>'; }
+  }
+
+  /* ---------- thread ---------- */
+  function showPane(thread){
+    $('#ib-list', el).classList.toggle('pane-hide', thread);
+    $('#ib-thread', el).classList.toggle('pane-hide', !thread);
+    root.classList.toggle('cust', thread);
+  }
+  function emptyThread(){
+    $('#ib-thread', el).innerHTML = '<div class="empty" style="margin:auto"><div class="ico ' + CH[ch].short + '" style="margin:0 auto 14px;width:54px;height:54px">' + ico(ch) + '</div><h3>Pick a chat</h3><p>Choose a customer on the left to read the conversation and reply.</p></div>';
+    $('#ib-cust', el).innerHTML = '';
+  }
+  async function openChat(phone, fromUrl){
+    st.sel = phone; st.data = null; st.gen++; var gen = st.gen; st.lastMsgSig = '';
+    if(!fromUrl) history.replaceState(null, '', '#/inbox/' + ch + '?chat=' + encodeURIComponent(phone));
+    else history.replaceState(null, '', '#/inbox/' + ch + '?chat=' + encodeURIComponent(phone));
+    renderRows(); showPane(true);
+    var t = st.threads.filter(function(x){ return x.customer_phone === phone; })[0];
+    $('#ib-thread', el).innerHTML = threadShell(t ? t.label : phone) ;
+    try {
+      var d = await api('/api/inbox/thread?customer_phone=' + encodeURIComponent(phone));
+      if(gen !== st.gen) return;
+      st.data = d; paintThread(true);
+      if(t && t.unread) markRead(phone);
+      if(!st.replies) loadReplies();
+    } catch(e){ if(gen === st.gen) $('#ib-msgs', el).innerHTML = '<div class="empty"><h3>We could not open this chat</h3><p>' + esc(M.errText(e)) + '</p><button class="btn" data-chat="' + esc(phone) + '">Try again</button></div>'; }
+  }
+  function threadShell(label){
+    return '<div class="ib-top"><button class="back m" data-back aria-label="Back to chats">' + ico('back') + '</button><div class="av ' + CH[ch].short + '" style="width:38px;height:38px;font-size:14px">' + esc(M.initials(label)) + '</div><div class="grow"><b class="ellipsis" id="th-name" style="display:block">' + esc(label) + '</b><span class="small muted ellipsis" id="th-sub" style="display:block">&nbsp;</span></div>' +
+      '<button class="chip" id="th-ai" aria-pressed="true" title="Turn the AI on or off for this customer"><span class="dot g"></span>AI on</button><button class="btn sm ghost cust-btn" id="th-cust" aria-label="Customer details">' + ico('user', ' width="18" height="18"') + '</button></div>' +
+      '<div id="ib-notes"></div><div class="msgs" id="ib-msgs"><div class="skel" style="height:50px;width:60%"></div><div class="skel" style="height:50px;width:50%;align-self:flex-end"></div></div><div class="composer" id="ib-comp"></div>';
+  }
+  function paintThread(force){
+    var d = st.data; if(!d) return;
+    $('#th-name', el).textContent = d.label;
+    $('#th-sub', el).textContent = d.phone || (CH[ch].name + ' customer');
+    var aiBtn = $('#th-ai', el), paused = d.ai_paused;
+    aiBtn.setAttribute('aria-pressed', String(!paused));
+    aiBtn.innerHTML = '<span class="dot ' + (paused ? 'a' : 'g') + '"></span>' + (paused ? 'AI paused' : 'AI on');
+    // notices
+    var n = '';
+    if(d.handover) n += '<div class="notice r"><span><b>This customer needs you.</b> ' + esc(d.handover.summary || d.handover.reason || '') + '</span><button class="btn sm" data-resolve="' + esc(d.handover.id) + '">Mark as done</button></div>';
+    if(paused) n += '<div class="notice a"><span>The AI is not replying to this customer' + (d.ai_paused_until ? ' until ' + esc(M.fmtTime(d.ai_paused_until)) : '') + '.</span><button class="btn sm" data-ai="on">Turn AI back on</button></div>';
+    var w = d.reply_window || {}, hl = w.open ? M.hoursLeft(w.closes_at) : 0;
+    if(w.open && hl < 3) n += '<div class="notice a"><span>You can reply for about ' + (hl < 1 ? Math.max(1, Math.round(hl * 60)) + ' more minutes' : Math.round(hl * 10) / 10 + ' more hours') + '.</span></div>';
+    $('#ib-notes', el).innerHTML = n;
+    // messages
+    var msgs = d.messages || [], ms = msgs.length + ':' + (msgs.length ? msgs[msgs.length - 1].id : '');
+    if(force || ms !== st.lastMsgSig){
+      var box = $('#ib-msgs', el), near = box.scrollHeight - box.scrollTop - box.clientHeight < 140;
+      var h = '', day = '';
+      if(d.has_more) h += '<button class="btn sm ghost" data-older style="align-self:center">Load earlier messages</button>';
+      if(!msgs.length) h += '<div class="empty" style="margin:auto"><p>No messages yet.</p></div>';
+      msgs.forEach(function(m){
+        var dd = M.fmtDay(m.created_at); if(dd !== day){ day = dd; h += '<div class="dayline">' + esc(dd) + '</div>'; }
+        var out = m.direction === 'out', vend = out && m.sender === 'vendor';
+        h += '<div class="m-row ' + (out ? 'out ' + (vend ? 'vendor' : 'ai') : 'in') + '"><div class="m-b">' + esc(m.body) + '</div><div class="m-meta">' + esc(M.fmtTime(m.created_at)) + (out ? (vend ? ' · You' : ' · AI') : '') + '</div></div>';
+      });
+      box.innerHTML = h; st.lastMsgSig = ms;
+      if(force || near) box.scrollTop = box.scrollHeight;
+    }
+    paintComposer();
+  }
+  function paintComposer(){
+    var d = st.data, c = $('#ib-comp', el); if(!d || !c) return;
+    var open = d.reply_window && d.reply_window.open, prev = $('#ib-text', el), keep = prev ? prev.value : '';
+    var sig2 = (open ? 'o' : 'c') + (st.replies ? st.replies.length : 'x');
+    if(c.dataset.sig === sig2) return; c.dataset.sig = sig2;
+    if(!open){ c.innerHTML = '<div class="notice" style="border:0;padding:6px 2px;color:var(--mute)"><span>It has been more than 24 hours since this customer wrote, and ' + esc(CH[ch].name) + ' only allows replies inside that time. You can reply again when they message you.</span></div>'; return; }
+    var qr = (st.replies && st.replies.length) ? '<div class="qr">' + st.replies.map(function(r){ return '<button class="chip" data-qr="' + esc(r.id) + '" title="' + esc(r.body) + '">' + esc(r.title) + '</button>'; }).join('') + '</div>' : '';
+    c.innerHTML = qr + '<div class="ta"><textarea id="ib-text" rows="1" maxlength="4000" placeholder="Write a reply. The AI stays quiet while you talk." aria-label="Your reply"></textarea><button class="send" id="ib-send" aria-label="Send reply">' + ico('send') + '</button></div>';
+    var ta = $('#ib-text', el); ta.value = keep; autosize(ta);
+  }
+  function autosize(ta){ ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 140) + 'px'; }
+  async function loadReplies(){ try { st.replies = await api('/api/replies'); var c = $('#ib-comp', el); if(c) { c.dataset.sig = ''; paintComposer(); } } catch(e){ st.replies = []; } }
+  async function markRead(phone){
+    try { await api('/api/inbox/read', {method:'POST', body:{customer_phone: phone}}); var t = st.threads.filter(function(x){ return x.customer_phone === phone; })[0]; if(t) t.unread = 0; renderFilters(); renderRows(); M.loadSummary(); } catch(e){}
+  }
+  async function refreshThread(){
+    if(!st.sel || st.sending) return; var gen = st.gen;
+    try { var d = await api('/api/inbox/thread?customer_phone=' + encodeURIComponent(st.sel)); if(gen !== st.gen) return;
+      var before = st.data && st.data.messages ? st.data.messages.length : 0; st.data = d; paintThread(false);
+      if(d.messages.length > before && d.messages.length && d.messages[d.messages.length - 1].direction === 'in') markRead(st.sel);
+    } catch(e){}
+  }
+  async function send(){
+    var ta = $('#ib-text', el), btn = $('#ib-send', el); if(!ta || st.sending) return;
+    var text = ta.value.trim(); if(!text){ ta.focus(); return; }
+    st.sending = true; btn.disabled = true; var phone = st.sel;
+    try {
+      await api('/api/inbox/reply', {method:'POST', body:{customer_phone: phone, text: text}});
+      ta.value = ''; autosize(ta);
+      st.sending = false; await refreshThreadForce(); loadList(false); M.loadSummary();
+    } catch(e){
+      st.sending = false; btn.disabled = false;
+      M.toast(M.errText(e), 'bad');
+      if(e.data && (e.data.code === 'window_closed' || e.data.code === 'not_connected')) refreshThreadForce();
+    }
+  }
+  async function refreshThreadForce(){ st.lastMsgSig = ''; var gen = st.gen; try { var d = await api('/api/inbox/thread?customer_phone=' + encodeURIComponent(st.sel)); if(gen !== st.gen) return; st.data = d; paintThread(true); } catch(e){} }
+
+  /* ---------- customer panel ---------- */
+  function custHtml(){
+    var d = st.data; if(!d) return '';
+    var c = d.contact;
+    var h = '<div style="text-align:center;margin-bottom:14px"><div class="av ' + CH[ch].short + '" style="width:64px;height:64px;font-size:22px;margin:0 auto 10px">' + esc(M.initials(d.label)) + '</div><b style="font-size:17px">' + esc(d.label) + '</b><div class="small muted">' + esc(d.phone || (CH[ch].name + ' customer')) + '</div></div>';
+    if(!c) return h + '<p class="muted small" style="text-align:center">We do not have more details about this customer yet.</p>';
+    var stage = {browsing:'Browsing', interested:'Interested', ready_to_buy:'Ready to buy'}[c.lead_stage] || '';
+    h += '<div class="row wrap" style="justify-content:center;margin-bottom:14px">' + (stage ? '<span class="badge ' + (c.lead_stage === 'ready_to_buy' ? 'g' : 'i') + '">' + stage + '</span>' : '') + '</div>';
+    if(c.interest) h += '<div class="field"><label class="f">Interested in</label><div class="small">' + esc(c.interest) + '</div></div>';
+    h += '<div class="field"><label class="f" for="cu-name">Name</label><input class="inp" id="cu-name" value="' + esc(c.name || '') + '" maxlength="60" placeholder="Add their name"></div>' +
+      '<div class="field"><label class="f" for="cu-status">Status</label><select class="inp" id="cu-status"><option value="new">New</option><option value="contacted">Contacted</option><option value="closed">Closed</option></select></div>' +
+      '<div class="field"><label class="f" for="cu-notes">Notes</label><textarea class="inp" id="cu-notes" maxlength="1000" placeholder="Only you can see these notes" style="min-height:90px">' + esc(c.notes || '') + '</textarea></div>' +
+      '<button class="btn primary block" data-savecust>Save details</button>';
+    return h;
+  }
+  function paintCust(root2){
+    root2.innerHTML = custHtml(); var s = $('#cu-status', root2); if(s && st.data.contact) s.value = st.data.contact.status || 'new';
+  }
+  async function saveCust(scope, btn){
+    var c = st.data && st.data.contact; if(!c) return;
+    var name = $('#cu-name', scope).value, status = $('#cu-status', scope).value, notes = $('#cu-notes', scope).value;
+    try {
+      await M.withBusy(btn, 'Saving', function(){ return api('/api/contacts/update', {method:'POST', body:{contact_id: c.id, name: name, status: status, notes: notes}}); });
+      c.name = name.trim() || null; c.status = status; c.notes = notes; M.toast('Details saved.', 'good');
+      if(c.name){ st.data.label = c.name; } loadList(false); paintThread(false);
+    } catch(e){ M.toast(M.errText(e), 'bad'); }
+  }
+
+  /* ---------- events ---------- */
+  el.onclick = async function(e){
+    var b;
+    if(e.target.closest('#ib-retry')){ loadList(true); return; }
+    if((b = e.target.closest('[data-f]'))){ st.filter = b.dataset.f; renderFilters(); renderRows(); return; }
+    if((b = e.target.closest('[data-chat]'))){ openChat(b.dataset.chat); return; }
+    if(e.target.closest('[data-back]')){ st.sel = null; st.gen++; history.replaceState(null, '', '#/inbox/' + ch); showPane(false); renderRows(); emptyThread(); return; }
+    if((b = e.target.closest('[data-qr]'))){ var rp = (st.replies || []).filter(function(x){ return String(x.id) === b.dataset.qr; })[0]; var ta = $('#ib-text', el); if(rp && ta){ ta.value = (ta.value ? ta.value + ' ' : '') + rp.body; autosize(ta); ta.focus(); } return; }
+    if(e.target.closest('#ib-send')){ send(); return; }
+    if((b = e.target.closest('[data-resolve]'))){
+      try { await M.withBusy(b, '', function(){ return api('/api/handover/resolve', {method:'POST', body:{alert_id: b.dataset.resolve}}); }); M.toast('Marked as done.', 'good'); refreshThreadForce(); loadList(false); M.loadSummary(); }
+      catch(er){ M.toast(M.errText(er), 'bad'); }
+      return;
+    }
+    if(e.target.closest('#th-ai') || e.target.closest('[data-ai]')){
+      if(!st.data) return; var turnOn = !!st.data.ai_paused;
+      try { await api('/api/chat/toggle', {method:'POST', body:{customer_phone: st.sel, ai_enabled: turnOn}}); M.toast(turnOn ? 'The AI is back on for this customer.' : 'The AI will not reply to this customer for 24 hours.', 'good'); refreshThreadForce(); loadList(false); }
+      catch(er2){ M.toast(M.errText(er2), 'bad'); }
+      return;
+    }
+    if(e.target.closest('#th-cust')){
+      var m = M.openModal('<h3 style="margin-bottom:14px">Customer</h3><div id="cu-modal"></div>', {noFocus:true}); var box2 = $('#cu-modal', m); paintCust(box2);
+      box2.addEventListener('click', function(ev){ var s = ev.target.closest('[data-savecust]'); if(s) saveCust(box2, s); });
+      return;
+    }
+    if(e.target.closest('[data-savecust]')){ saveCust($('#ib-cust', el), e.target.closest('[data-savecust]')); return; }
+    if(e.target.closest('[data-older]')){
+      var first = st.data.messages[0]; if(!first) return;
+      try { var o = await api('/api/inbox/thread?customer_phone=' + encodeURIComponent(st.sel) + '&before=' + encodeURIComponent(first.created_at)); st.data.messages = o.messages.concat(st.data.messages); st.data.has_more = o.has_more; var box = $('#ib-msgs', el), h0 = box.scrollHeight; paintThread(true); box.scrollTop = box.scrollHeight - h0; }
+      catch(er3){ M.toast(M.errText(er3), 'bad'); }
+    }
+  };
+  el.oninput = function(e){
+    if(e.target.id === 'ib-search'){ st.q = e.target.value; renderRows(); }
+    else if(e.target.id === 'ib-text') autosize(e.target);
+  };
+  el.onkeydown = function(e){
+    if(e.target.id === 'ib-text' && e.key === 'Enter' && !e.shiftKey && window.innerWidth >= 900){ e.preventDefault(); send(); }
+  };
+
+  /* ---------- start ---------- */
+  emptyThread(); renderFilters();
+  await loadList(true);
+  var want = r.query && r.query.chat;
+  if(want){
+    if(!st.threads.some(function(t){ return t.customer_phone === want; })) st.threads.unshift({customer_phone: want, label: want.replace(/^(ig:|fb:)/, ''), unread: 0, last_message: '', last_at: null, needs_human: false, ai_paused: false});
+    openChat(want, true);
+  }
+  M.addTimer(setInterval(function(){ if(!document.hidden) loadList(false); }, 12000));
+  M.addTimer(setInterval(function(){ if(!document.hidden) refreshThread(); }, 6000));
+  // customer panel on wide screens follows the open chat
+  M.addTimer(setInterval(function(){ var c = $('#ib-cust', el); if(c && st.data && window.innerWidth >= 1280 && c.dataset.for !== st.sel + ':' + (st.data.contact ? st.data.contact.id : '')){ c.dataset.for = st.sel + ':' + (st.data.contact ? st.data.contact.id : ''); paintCust(c); } }, 700));
+};
+})();
+</script>
+<script>
+(function(){
+'use strict';
+var M = window.MDK, $ = M.$, $$ = M.$$, esc = M.esc, S = M.S, api = M.api, ico = M.ico, CH = M.CH;
+function head(t, sub, actions){ return '<div class="pagehead row between wrap" style="align-items:flex-start"><div><h1>' + esc(t) + '</h1>' + (sub ? '<p>' + esc(sub) + '</p>' : '') + '</div>' + (actions ? '<div class="row wrap">' + actions + '</div>' : '') + '</div>'; }
+function err(el, e){ el.innerHTML = '<div class="card"><h3>We could not load this page</h3><p class="sub">' + esc(M.errText(e)) + '</p><button class="btn" onclick="location.reload()">Try again</button></div>'; }
+function setupBanner(){ return M.status() !== 'active' ? '<div class="banner"><div><b>You can set up your business now</b><span class="muted">' + (M.status() === 'part_paid' ? 'Pay the remaining ' : 'Pay the setup fee of ') + M.money((S.me.fee || {}).balance_left_ngn) + ' to connect channels and open your inboxes.</span></div><button class="btn warn" data-pay>Pay ' + M.money((S.me.fee || {}).balance_left_ngn) + '</button></div>' : ''; }
+
+/* ============================================================
+   PRODUCTS
+   ============================================================ */
+M.views.products = async function(el){
+  var items = await api('/api/products');
+  function paint(){
+    var h = head('Products', 'Your AI answers customers using the products and prices you add here.', '<button class="btn primary" data-add>' + ico('plus') + 'Add product</button>') + setupBanner();
+    if(!items.length){
+      h += '<div class="card empty"><h3>No products yet</h3><p>Add what you sell, with its price. Your AI will use it to answer customers.</p><button class="btn primary" data-add>Add your first product</button></div>';
+    } else {
+      h += '<div class="card flat"><table class="tbl"><thead><tr><th>Product</th><th>Price</th><th></th></tr></thead><tbody>' + items.map(function(p){
+        return '<tr><td data-l="Product"><b>' + esc(p.name) + '</b>' + (p.description ? '<div class="small muted">' + esc(p.description) + '</div>' : '') + '</td><td data-l="Price" style="white-space:nowrap"><b>' + M.money(p.price) + '</b></td><td style="text-align:right;white-space:nowrap"><button class="btn sm" data-edit="' + esc(p.id) + '">' + ico('edit', ' width="15" height="15"') + 'Edit</button> <button class="btn sm danger" data-del="' + esc(p.id) + '" aria-label="Delete ' + esc(p.name) + '">' + ico('trash', ' width="15" height="15"') + '</button></td></tr>';
+      }).join('') + '</tbody></table></div>';
+    }
+    el.innerHTML = h;
+  }
+  function form(p){
+    var m = M.openModal('<h3>' + (p ? 'Edit product' : 'Add a product') + '</h3><form id="f-prod" novalidate style="margin-top:14px">' +
+      '<div class="field"><label class="f" for="pr-name">Product name</label><input class="inp" id="pr-name" maxlength="200" value="' + esc(p ? p.name : '') + '" placeholder="e.g. Ankara maxi dress" required></div>' +
+      '<div class="field"><label class="f" for="pr-price">Price (₦)</label><input class="inp" id="pr-price" type="number" inputmode="decimal" min="0" step="any" value="' + (p ? esc(p.price) : '') + '" placeholder="e.g. 18000" required></div>' +
+      '<div class="field"><label class="f" for="pr-desc">Description (optional)</label><textarea class="inp" id="pr-desc" maxlength="1000" placeholder="Sizes, colours, delivery, anything customers ask about">' + esc(p ? p.description : '') + '</textarea></div>' +
+      '<div class="err hidden" id="pr-err" role="alert"></div><button class="btn primary block" type="submit">' + (p ? 'Save changes' : 'Add product') + '</button></form>');
+    $('#f-prod', m).addEventListener('submit', async function(e){
+      e.preventDefault(); var name = $('#pr-name').value.trim(), price = $('#pr-price').value, desc = $('#pr-desc').value.trim(), eb = $('#pr-err');
+      eb.classList.add('hidden');
+      if(!name || price === '' || Number(price) < 0){ eb.textContent = 'Please add the product name and a price.'; eb.classList.remove('hidden'); return; }
+      try {
+        var saved = await M.withBusy($('button[type=submit]', e.target), 'Saving', function(){ return p ? api('/api/products/' + p.id, {method:'PUT', body:{name:name, price:Number(price), description:desc}}) : api('/api/products', {method:'POST', body:{name:name, price:Number(price), description:desc}}); });
+        if(p){ items = items.map(function(x){ return x.id === p.id ? saved : x; }); } else items.unshift(saved);
+        M.closeModal(); paint(); M.toast(p ? 'Product updated.' : 'Product added.', 'good');
+      } catch(er){ eb.textContent = M.errText(er); eb.classList.remove('hidden'); }
+    });
+  }
+  paint();
+  el.onclick = async function(e){
+    var b;
+    if(e.target.closest('[data-add]')) { form(null); return; }
+    if((b = e.target.closest('[data-edit]'))){ form(items.filter(function(x){ return String(x.id) === b.dataset.edit; })[0]); return; }
+    if((b = e.target.closest('[data-del]'))){
+      var p = items.filter(function(x){ return String(x.id) === b.dataset.del; })[0];
+      if(!(await M.confirmBox('Delete ' + p.name + '?', 'Your AI will stop using this product. This cannot be undone.', 'Delete', true))) return;
+      try { await api('/api/products/' + p.id, {method:'DELETE'}); items = items.filter(function(x){ return x.id !== p.id; }); paint(); M.toast('Product deleted.', 'good'); } catch(er){ M.toast(M.errText(er), 'bad'); }
+    }
+  };
+};
+
+/* ============================================================
+   SAVED REPLIES
+   ============================================================ */
+M.views.replies = async function(el){
+  var items = await api('/api/replies');
+  function paint(){
+    var h = head('Saved replies', 'Short answers you can tap instead of typing, right inside any chat.', '<button class="btn primary" data-add>' + ico('plus') + 'New reply</button>');
+    if(!items.length) h += '<div class="card empty"><h3>No saved replies yet</h3><p>Save the answers you type most, like your bank details or delivery times.</p><button class="btn primary" data-add>Create a saved reply</button></div>';
+    else h += '<div class="card flat list">' + items.map(function(r){ return '<div class="it" style="align-items:flex-start"><div class="grow"><b>' + esc(r.title) + '</b><div class="small muted" style="white-space:pre-wrap;margin-top:2px">' + esc(r.body) + '</div></div><div class="row"><button class="btn sm" data-edit="' + esc(r.id) + '">Edit</button><button class="btn sm danger" data-del="' + esc(r.id) + '" aria-label="Delete ' + esc(r.title) + '">' + ico('trash', ' width="15" height="15"') + '</button></div></div>'; }).join('') + '</div>';
+    el.innerHTML = h;
+  }
+  function form(r){
+    var m = M.openModal('<h3>' + (r ? 'Edit saved reply' : 'New saved reply') + '</h3><form id="f-rep" novalidate style="margin-top:14px"><div class="field"><label class="f" for="rp-t">Short name</label><input class="inp" id="rp-t" maxlength="60" value="' + esc(r ? r.title : '') + '" placeholder="e.g. Bank details" required></div><div class="field"><label class="f" for="rp-b">Message</label><textarea class="inp" id="rp-b" maxlength="1000" required placeholder="The message that will be sent">' + esc(r ? r.body : '') + '</textarea></div><div class="err hidden" id="rp-err" role="alert"></div><button class="btn primary block" type="submit">Save reply</button></form>');
+    $('#f-rep', m).addEventListener('submit', async function(e){
+      e.preventDefault(); var t = $('#rp-t').value.trim(), b = $('#rp-b').value.trim(), eb = $('#rp-err'); eb.classList.add('hidden');
+      if(!t || !b){ eb.textContent = 'Give the reply a short name and the message text.'; eb.classList.remove('hidden'); return; }
+      try {
+        var saved = await M.withBusy($('button[type=submit]', e.target), 'Saving', function(){ return r ? api('/api/replies/' + r.id, {method:'PUT', body:{title:t, body:b}}) : api('/api/replies', {method:'POST', body:{title:t, body:b}}); });
+        if(r) items = items.map(function(x){ return x.id === r.id ? saved : x; }); else items.push(saved);
+        M.closeModal(); paint(); M.toast('Saved.', 'good');
+      } catch(er){ eb.textContent = M.errText(er); eb.classList.remove('hidden'); }
+    });
+  }
+  paint();
+  el.onclick = async function(e){
+    var b;
+    if(e.target.closest('[data-add]')){ form(null); return; }
+    if((b = e.target.closest('[data-edit]'))){ form(items.filter(function(x){ return String(x.id) === b.dataset.edit; })[0]); return; }
+    if((b = e.target.closest('[data-del]'))){
+      var r = items.filter(function(x){ return String(x.id) === b.dataset.del; })[0];
+      if(!(await M.confirmBox('Delete this saved reply?', r.title, 'Delete', true))) return;
+      try { await api('/api/replies/' + r.id, {method:'DELETE'}); items = items.filter(function(x){ return x.id !== r.id; }); paint(); M.toast('Deleted.', 'good'); } catch(er){ M.toast(M.errText(er), 'bad'); }
+    }
+  };
+};
+
+/* ============================================================
+   AI PERSONA
+   ============================================================ */
+M.views.persona = async function(el){
+  var p = await api('/api/config/persona'), tones = ['friendly', 'professional', 'warm and polite', 'short and direct', 'playful'];
+  el.innerHTML = head('AI persona', 'This is how your AI introduces itself and talks to your customers. It speaks as ' + M.biz() + ', never as MatrixDesk.') + setupBanner() +
+    '<div class="card"><form id="f-per" novalidate>' +
+    '<div class="field"><label class="f" for="pe-name">Your AI\'s name</label><input class="inp" id="pe-name" maxlength="60" value="' + esc(p.ai_name) + '" placeholder="' + esc(S.me.default_ai_name || '') + '"><div class="hint">Customers see this name when the AI introduces itself.</div></div>' +
+    '<div class="field"><label class="f" for="pe-tone">How should it sound?</label><input class="inp" id="pe-tone" maxlength="100" value="' + esc(p.tone) + '"><div class="row wrap" style="margin-top:8px">' + tones.map(function(t){ return '<button type="button" class="chip" data-tone="' + esc(t) + '">' + esc(t) + '</button>'; }).join('') + '</div></div>' +
+    '<div class="field"><label class="f" for="pe-ins">Greeting and rules (optional)</label><textarea class="inp" id="pe-ins" maxlength="2000" style="min-height:150px" placeholder="e.g. Greet new customers warmly. Never promise delivery dates. Always offer to place the order.">' + esc(p.system_instructions) + '</textarea><div class="hint">Plain words are fine. This is where you tell your AI how you like to greet customers.</div></div>' +
+    '<div class="err hidden" id="pe-err" role="alert"></div><button class="btn primary" type="submit">Save persona</button></form></div>' +
+    '<div class="card" style="margin-top:14px"><h3>Preview</h3><p class="sub">How a new customer would see your AI.</p><div class="phone" style="width:min(100%,360px);margin:0"><div class="top"><span class="dot g"></span>' + esc(M.biz()) + '</div><div class="screen" style="min-height:0"><div class="bub in">Hello, are you open?<small>Now</small></div><div class="bub out" id="pe-prev">Hi, I\'m ' + esc(p.ai_name) + ' from ' + esc(M.biz()) + '. How can I help you today?<small>Now</small></div></div></div></div>';
+  var nm = $('#pe-name', el);
+  nm.addEventListener('input', function(){ var v = nm.value.trim() || S.me.default_ai_name || 'your assistant'; $('#pe-prev').firstChild.nodeValue = 'Hi, I\'m ' + v + ' from ' + M.biz() + '. How can I help you today?'; });
+  el.addEventListener('click', function(e){ var t = e.target.closest('[data-tone]'); if(t) $('#pe-tone').value = t.dataset.tone; });
+  $('#f-per', el).addEventListener('submit', async function(e){
+    e.preventDefault(); var eb = $('#pe-err'); eb.classList.add('hidden');
+    try {
+      var d = await M.withBusy($('button[type=submit]', e.target), 'Saving', function(){ return api('/api/config/persona', {method:'POST', body:{ai_name: $('#pe-name').value, tone: $('#pe-tone').value, system_instructions: $('#pe-ins').value}}); });
+      $('#pe-name').value = d.ai_name; M.toast('Persona saved.', 'good');
+    } catch(er){ eb.textContent = M.errText(er); eb.classList.remove('hidden'); }
+  });
+};
+
+/* ============================================================
+   CONTACTS
+   ============================================================ */
+M.views.contacts = async function(el){
+  var cl = M.connectedList(), f = {channel: '', stage: '', status: '', q: ''}, rows = [];
+  el.innerHTML = head('Contacts', 'Everyone who has messaged you, with how interested they are.', '<button class="btn" id="ct-exp">' + ico('dl') + 'Download CSV</button>') +
+    '<div class="card" style="margin-bottom:14px"><div class="grid c3"><div><label class="f" for="ct-q">Search</label><input class="inp" id="ct-q" type="search" placeholder="Name or phone number"></div>' +
+    '<div><label class="f" for="ct-stage">Interest</label><select class="inp" id="ct-stage"><option value="">Everyone</option><option value="ready_to_buy">Ready to buy</option><option value="interested">Interested</option><option value="browsing">Browsing</option></select></div>' +
+    '<div><label class="f" for="ct-status">Follow-up</label><select class="inp" id="ct-status"><option value="">Any</option><option value="new">New</option><option value="contacted">Contacted</option><option value="closed">Closed</option></select></div></div>' +
+    (cl.length > 1 ? '<div class="seg" style="margin-top:12px"><button class="chip on" data-ch="">All channels</button>' + cl.map(function(k){ return '<button class="chip" data-ch="' + k + '">' + esc(CH[k].name) + '</button>'; }).join('') + '</div>' : '') + '</div><div id="ct-body"></div>';
+  function qs(){ var p = []; ['channel', 'stage', 'status', 'q'].forEach(function(k){ if(f[k]) p.push(k + '=' + encodeURIComponent(f[k])); }); return p.length ? '?' + p.join('&') : ''; }
+  var stageB = function(s){ return s === 'ready_to_buy' ? '<span class="badge g">Ready to buy</span>' : (s === 'interested' ? '<span class="badge i">Interested</span>' : (s ? '<span class="badge">Browsing</span>' : '')); };
+  async function load(){
+    var body = $('#ct-body', el); body.innerHTML = '<div class="skel" style="height:120px"></div>';
+    try { rows = await api('/api/contacts/list' + qs()); } catch(e){ body.innerHTML = '<div class="card"><p class="muted">' + esc(M.errText(e)) + '</p></div>'; return; }
+    if(!rows.length){ body.innerHTML = '<div class="card empty"><h3>No contacts found</h3><p>' + (f.q || f.stage || f.status || f.channel ? 'Try changing the filters.' : 'When customers message you, they appear here automatically.') + '</p></div>'; return; }
+    body.innerHTML = '<div class="card flat"><table class="tbl"><thead><tr><th>Customer</th><th>Channel</th><th>Interest</th><th>Follow-up</th><th>Last message</th></tr></thead><tbody>' + rows.map(function(c){
+      var nm = c.name || (c.phone || c.customer_phone || 'Customer'), ch = CH[c.channel] || CH.whatsapp;
+      return '<tr style="cursor:pointer" data-open="' + esc(c.id) + '"><td data-l="Customer"><b>' + esc(nm) + '</b>' + (c.phone && c.name ? '<div class="small muted">' + esc(c.phone) + '</div>' : '') + '</td><td data-l="Channel"><span class="' + ch.cls + '">' + esc(ch.name) + '</span></td><td data-l="Interest">' + stageB(c.lead_stage) + (c.interest ? '<div class="small muted">' + esc(c.interest) + '</div>' : '') + '</td><td data-l="Follow-up">' + esc((c.status || 'new').replace(/^./, function(x){ return x.toUpperCase(); })) + '</td><td data-l="Last message" class="small muted">' + esc(M.ago(c.last_message_at)) + (c.last_message ? ' · ' + esc(String(c.last_message).slice(0, 60)) : '') + '</td></tr>';
+    }).join('') + '</tbody></table></div>';
+  }
+  var go = M.debounce(load, 350);
+  el.addEventListener('input', function(e){ if(e.target.id === 'ct-q'){ f.q = e.target.value.trim(); go(); } });
+  el.addEventListener('change', function(e){ if(e.target.id === 'ct-stage'){ f.stage = e.target.value; load(); } else if(e.target.id === 'ct-status'){ f.status = e.target.value; load(); } });
+  el.addEventListener('click', async function(e){
+    var b;
+    if((b = e.target.closest('[data-ch]'))){ f.channel = b.dataset.ch; $$('[data-ch]', el).forEach(function(x){ x.classList.toggle('on', x === b); }); load(); return; }
+    if(e.target.closest('#ct-exp')){
+      var btn = $('#ct-exp', el);
+      try {
+        var res = await M.withBusy(btn, 'Preparing', function(){ return api('/api/contacts/export' + (f.channel ? '?channel=' + f.channel : ''), {raw:true}); });
+        if(!res.ok) throw new Error('We could not prepare the file. Please try again.');
+        var blob = await res.blob(), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'contacts.csv'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      } catch(er){ M.toast(M.errText(er), 'bad'); }
+      return;
+    }
+    if((b = e.target.closest('[data-open]'))){
+      var c = rows.filter(function(x){ return String(x.id) === b.dataset.open; })[0]; if(!c) return;
+      var ch = CH[c.channel] || CH.whatsapp, canOpen = M.connectedList().indexOf(ch.key) >= 0;
+      var m = M.openModal('<h3>' + esc(c.name || c.phone || 'Customer') + '</h3><p class="muted small" style="margin-bottom:14px"><span class="' + ch.cls + '">' + esc(ch.name) + '</span>' + (c.phone ? ' · ' + esc(c.phone) : '') + '</p>' +
+        (c.interest ? '<div class="field"><label class="f">Interested in</label><div>' + esc(c.interest) + '</div></div>' : '') +
+        (c.first_message ? '<div class="field"><label class="f">First message</label><div class="small muted">' + esc(c.first_message) + '</div></div>' : '') +
+        '<div class="field"><label class="f" for="cm-name">Name</label><input class="inp" id="cm-name" maxlength="60" value="' + esc(c.name || '') + '"></div>' +
+        '<div class="field"><label class="f" for="cm-status">Follow-up</label><select class="inp" id="cm-status"><option value="new">New</option><option value="contacted">Contacted</option><option value="closed">Closed</option></select></div>' +
+        '<div class="field"><label class="f" for="cm-notes">Notes</label><textarea class="inp" id="cm-notes" maxlength="1000">' + esc(c.notes || '') + '</textarea></div>' +
+        '<div class="row wrap"><button class="btn primary grow" data-save>Save</button>' + (canOpen ? '<a class="btn grow" href="#/inbox/' + ch.key + '?chat=' + encodeURIComponent(c.customer_phone) + '">Open chat</a>' : '') + '</div>', {noFocus:true});
+      $('#cm-status', m).value = c.status || 'new';
+      $('[data-save]', m).addEventListener('click', async function(ev){
+        try {
+          await M.withBusy(ev.currentTarget, 'Saving', function(){ return api('/api/contacts/update', {method:'POST', body:{contact_id: c.id, name: $('#cm-name', m).value, status: $('#cm-status', m).value, notes: $('#cm-notes', m).value}}); });
+          M.closeModal(); M.toast('Saved.', 'good'); load();
+        } catch(er){ M.toast(M.errText(er), 'bad'); }
+      });
+    }
+  });
+  load();
+};
+})();
+</script>
+<script>
+(function(){
+'use strict';
+var M = window.MDK, $ = M.$, $$ = M.$$, esc = M.esc, S = M.S, api = M.api, ico = M.ico, CH = M.CH;
+function head(t, sub, actions){ return '<div class="pagehead row between wrap" style="align-items:flex-start"><div><h1>' + esc(t) + '</h1>' + (sub ? '<p>' + esc(sub) + '</p>' : '') + '</div>' + (actions ? '<div class="row wrap">' + actions + '</div>' : '') + '</div>'; }
+
+/* ============================================================
+   KNOWLEDGE BOOK
+   ============================================================ */
+M.views.knowledge = async function(el){
+  var cfg = await M.getCfg().catch(function(){ return {}; });
+  var voiceOk = !!(cfg.voice_enabled && window.MediaRecorder && navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  var docs = await api('/api/knowledge/list');
+  var mode = 'type', rec = null;
+
+  el.innerHTML = head('Knowledge book', 'Teach your AI about your business. It answers customers using only what is in here, so add your policies, delivery details, opening hours and answers to common questions.') +
+    (M.status() !== 'active' ? '<div class="banner"><div><b>You can teach your AI now</b><span class="muted">' + (M.status() === 'part_paid' ? 'Pay the remaining ' : 'Pay the setup fee of ') + M.money((S.me.fee || {}).balance_left_ngn) + ' to connect channels.</span></div><button class="btn warn" data-pay>Pay ' + M.money((S.me.fee || {}).balance_left_ngn) + '</button></div>' : '') +
+    '<div class="card" style="margin-bottom:14px"><h3>Add to your knowledge book</h3><div class="tabs" style="margin-top:12px"><button data-mode="type" class="on">Type or paste</button>' + (voiceOk ? '<button data-mode="voice">Voice note</button>' : '') + '<button data-mode="file">Upload a file</button></div><div id="kb-add"></div></div>' +
+    '<div id="kb-list"></div>';
+
+  function paintList(){
+    var box = $('#kb-list', el);
+    if(!docs.length){ box.innerHTML = '<div class="card empty"><h3>Your knowledge book is empty</h3><p>Add your first entry above. Your AI can only answer what you teach it.</p></div>'; return; }
+    box.innerHTML = '<div class="card flat"><div style="padding:18px 20px 6px"><h3>What your AI knows (' + docs.length + ')</h3></div><div class="list">' + docs.map(function(d){
+      var how = d.input_method === 'voice' ? 'Voice note' : (d.source === 'file' ? 'File' : 'Typed');
+      var stt = d.status === 'ready' ? '' : (d.status === 'processing' ? '<span class="badge a">Processing</span>' : '<span class="badge r">Problem</span>');
+      return '<div class="it"><div class="ico">' + ico(d.source === 'file' ? 'file' : 'book') + '</div><div class="grow"><b class="ellipsis" style="display:block">' + esc(d.title || d.filename) + '</b><div class="small muted">' + how + ' · ' + esc(M.fmtDay(d.updated_at || d.created_at)) + '</div></div>' + stt +
+        (d.source === 'text' ? '<button class="btn sm" data-view="' + esc(d.id) + '">' + ico('edit', ' width="15" height="15"') + 'Edit</button>' : '') + '<button class="btn sm danger" data-rm="' + esc(d.id) + '" aria-label="Delete ' + esc(d.title) + '">' + ico('trash', ' width="15" height="15"') + '</button></div>';
+    }).join('') + '</div></div>';
+  }
+  async function reload(){ docs = await api('/api/knowledge/list'); paintList(); }
+
+  /* ----- add area ----- */
+  function paintAdd(){
+    var box = $('#kb-add', el);
+    $$('[data-mode]', el).forEach(function(b){ b.classList.toggle('on', b.dataset.mode === mode); });
+    if(mode === 'type'){
+      box.innerHTML = '<p class="sub" style="margin-top:12px">Write it the way you would explain it to a new staff member. We tidy it up and you check it before saving.</p><textarea class="inp" id="kb-text" style="min-height:160px" maxlength="20000" placeholder="e.g. We deliver in Lagos same day for ₦1,500. Outside Lagos takes 2 to 3 days. We do not accept returns on sale items."></textarea><div class="err hidden" id="kb-err" role="alert"></div><button class="btn primary" id="kb-tidy" style="margin-top:12px">' + ico('spark') + 'Tidy it up</button>';
+    } else if(mode === 'voice'){
+      box.innerHTML = '<p class="sub" style="margin-top:12px">Tap the button and just talk. Tell your AI about your products, prices, delivery and rules. You can record up to about 5 minutes at a time.</p><div id="vc" style="text-align:center;padding:10px 0"><button class="btn good" id="vc-start">' + ico('mic') + 'Start recording</button></div><div class="err hidden" id="kb-err" role="alert"></div>';
+    } else {
+      box.innerHTML = '<div class="drop" id="kb-drop" style="margin-top:12px"><p style="margin-bottom:12px">Drag a file here, or choose one from your phone or computer.</p><button class="btn" id="kb-pick">' + ico('file') + 'Choose a file</button><input type="file" id="kb-file" accept=".pdf,.txt,.md,.csv" class="hidden"><p class="hint" style="margin-top:12px">PDF, TXT or CSV. Scanned pages that are only photos cannot be read.</p></div><div class="err hidden" id="kb-err" role="alert"></div>';
+    }
+  }
+  function kerr(m){ var e = $('#kb-err', el); if(e){ e.textContent = m || ''; e.classList.toggle('hidden', !m); } }
+
+  /* ----- preview step: nothing is saved until the vendor taps Save ----- */
+  function preview(d, method){
+    var warn = (d.warnings || []).length ? '<div class="card warn" style="padding:14px;margin-bottom:12px"><b>Please double-check</b><ul style="margin:6px 0 0 18px;font-size:14px">' + d.warnings.map(function(w){ return '<li>' + esc(w) + '</li>'; }).join('') + '</ul></div>' : '';
+    var qs = (d.questions || []).length ? '<div class="card" style="padding:14px;margin-bottom:12px"><b>Not clear</b><ul style="margin:6px 0 0 18px;font-size:14px">' + d.questions.map(function(w){ return '<li>' + esc(w) + '</li>'; }).join('') + '</ul><p class="hint">Add the missing details in the text below.</p></div>' : '';
+    var m = M.openModal('<h3>Check before saving</h3><p class="muted small" style="margin:4px 0 14px">We tidied your words. Read it, fix anything wrong, then save.</p>' + warn + qs +
+      '<div class="field"><label class="f" for="pv-title">Title</label><input class="inp" id="pv-title" maxlength="200" value="' + esc(d.title || '') + '"></div>' +
+      '<div class="field"><label class="f" for="pv-text">What your AI will know</label><textarea class="inp" id="pv-text" style="min-height:200px" maxlength="100000">' + esc(d.cleaned_text || '') + '</textarea></div>' +
+      '<details class="fold"><summary>Show my original words</summary><p style="white-space:pre-wrap">' + esc(d.raw_text || '') + '</p></details>' +
+      '<div class="err hidden" id="pv-err" role="alert"></div><div class="row wrap" style="margin-top:14px"><button class="btn primary grow" id="pv-save">Save to knowledge book</button><button class="btn" data-close>Cancel</button></div>', {wide:true, noFocus:true});
+    $('#pv-save', m).addEventListener('click', async function(ev){
+      var title = $('#pv-title', m).value.trim(), text = $('#pv-text', m).value.trim(), eb = $('#pv-err', m); eb.classList.add('hidden');
+      if(!title){ eb.textContent = 'Please give this entry a title.'; eb.classList.remove('hidden'); return; }
+      try {
+        await M.withBusy(ev.currentTarget, 'Saving', function(){ return api('/api/knowledge/text', {method:'POST', timeout:120000, body:{title:title, content:text, raw_content:d.raw_text || '', input_method: method}}); });
+        M.closeModal(); M.toast('Added to your knowledge book.', 'good'); mode = 'type'; paintAdd(); reload();
+      } catch(er){ eb.textContent = M.errText(er); eb.classList.remove('hidden'); }
+    });
+  }
+  function rawFallback(e, raw, method){
+    // the tidy-up step failed but the vendor's own words can still be saved
+    var d = e.data || {}; if(!d.can_save_raw){ kerr(M.errText(e)); return; }
+    preview({title:'', cleaned_text: d.raw_text || raw, raw_text: d.raw_text || raw, warnings:['We could not tidy this up right now, so this is exactly what you wrote.'], questions:[]}, method);
+  }
+
+  /* ----- type ----- */
+  async function tidyText(btn){
+    var raw = $('#kb-text', el).value.trim(); kerr('');
+    if(raw.length < 10){ kerr('Please write a little more so we can tidy it up.'); return; }
+    try { var d = await M.withBusy(btn, 'Tidying up', function(){ return api('/api/knowledge/draft', {method:'POST', timeout:120000, body:{content: raw}}); }); preview(d, d.input_method || 'typed'); }
+    catch(e){ rawFallback(e, raw, 'typed'); }
+  }
+
+  /* ----- voice ----- */
+  var stream = null, chunks = [], recStart = 0, recTimer = null, mime = '', blob = null;
+  function pickMime(){ var c = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus']; for(var i = 0; i < c.length; i++){ try { if(MediaRecorder.isTypeSupported(c[i])) return c[i]; } catch(e){} } return ''; }
+  function fileExt(t){ return /mp4/.test(t) ? 'm4a' : (/ogg/.test(t) ? 'ogg' : 'webm'); }
+  async function startRec(){
+    kerr('');
+    try { stream = await navigator.mediaDevices.getUserMedia({audio:true}); }
+    catch(e){ kerr('Your browser blocked the microphone. Allow microphone access for this website in your browser settings, or type your notes instead.'); return; }
+    mime = pickMime(); chunks = []; blob = null;
+    try { rec = mime ? new MediaRecorder(stream, {mimeType: mime}) : new MediaRecorder(stream); } catch(e){ kerr('Recording is not supported on this browser. Please type your notes instead.'); stopStream(); return; }
+    mime = rec.mimeType || mime || 'audio/webm';
+    rec.ondataavailable = function(ev){ if(ev.data && ev.data.size) chunks.push(ev.data); };
+    rec.onstop = function(){ stopStream(); blob = new Blob(chunks, {type: mime}); showRecorded(); };
+    rec.start(); recStart = Date.now();
+    $('#vc', el).innerHTML = '<div class="rec" style="margin-bottom:14px"><span class="pulse"></span><b id="vc-t">0:00</b><span class="muted small">Recording… speak naturally</span></div><br><button class="btn danger" id="vc-stop">Stop recording</button>';
+    recTimer = setInterval(function(){ var s = Math.floor((Date.now() - recStart) / 1000), t = $('#vc-t', el); if(t) t.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); if(s >= 290) stopRec(); }, 500);
+    M.addTimer(recTimer);
+  }
+  function stopStream(){ if(stream){ stream.getTracks().forEach(function(t){ t.stop(); }); stream = null; } }
+  function stopRec(){ clearInterval(recTimer); if(rec && rec.state !== 'inactive') rec.stop(); }
+  function showRecorded(){
+    var box = $('#vc', el); if(!box) return;
+    if(!blob || !blob.size){ box.innerHTML = '<p class="muted">We did not hear anything. Please try again.</p><button class="btn good" id="vc-start">' + ico('mic') + 'Start recording</button>'; return; }
+    if(blob.size > 4 * 1024 * 1024){ kerr('That recording is too long. Please record shorter notes, about 5 minutes or less, one at a time.'); box.innerHTML = '<button class="btn good" id="vc-start">' + ico('mic') + 'Record again</button>'; return; }
+    var url = URL.createObjectURL(blob);
+    box.innerHTML = '<audio controls src="' + url + '" style="width:100%;max-width:420px"></audio><div class="row wrap" style="justify-content:center;margin-top:14px"><button class="btn primary" id="vc-send">' + ico('spark') + 'Turn into text</button><button class="btn" id="vc-again">Record again</button></div>';
+  }
+  async function sendVoice(btn){
+    kerr(''); var fd = new FormData(); fd.append('audio', blob, 'voice-note.' + fileExt(mime));
+    try { var d = await M.withBusy(btn, 'Listening', function(){ return api('/api/knowledge/draft', {method:'POST', form: fd, timeout:150000}); }); preview(d, 'voice'); }
+    catch(e){ kerr(M.errText(e)); }
+  }
+
+  /* ----- file ----- */
+  async function uploadFile(file){
+    if(!file) return; kerr('');
+    if(!/\.(pdf|txt|md|csv)$/i.test(file.name)){ kerr('Please choose a PDF, TXT or CSV file.'); return; }
+    var fd = new FormData(); fd.append('file', file); var box = $('#kb-drop', el);
+    box.innerHTML = '<span class="spin" style="width:24px;height:24px;border-width:3px"></span><p style="margin-top:10px">Reading ' + esc(file.name) + '…</p>';
+    try { await api('/api/knowledge/upload', {method:'POST', form: fd, timeout:180000}); M.toast('File added to your knowledge book.', 'good'); paintAdd(); reload(); }
+    catch(e){ paintAdd(); kerr(M.errText(e)); }
+  }
+
+  /* ----- events ----- */
+  el.onclick = async function(e){
+    var b;
+    if((b = e.target.closest('[data-mode]'))){ stopRec(); mode = b.dataset.mode; paintAdd(); return; }
+    if((b = e.target.closest('#kb-tidy'))){ tidyText(b); return; }
+    if(e.target.closest('#vc-start') || e.target.closest('#vc-again')){ startRec(); return; }
+    if(e.target.closest('#vc-stop')){ stopRec(); return; }
+    if((b = e.target.closest('#vc-send'))){ sendVoice(b); return; }
+    if(e.target.closest('#kb-pick')){ $('#kb-file', el).click(); return; }
+    if((b = e.target.closest('[data-view]'))){
+      try {
+        var doc = await api('/api/knowledge/' + b.dataset.view);
+        var m = M.openModal('<h3>Edit entry</h3><div class="field" style="margin-top:14px"><label class="f" for="ed-title">Title</label><input class="inp" id="ed-title" maxlength="200" value="' + esc(doc.title) + '"></div><div class="field"><label class="f" for="ed-text">What your AI knows</label><textarea class="inp" id="ed-text" style="min-height:220px" maxlength="100000">' + esc(doc.content) + '</textarea></div><div class="err hidden" id="ed-err" role="alert"></div><button class="btn primary block" id="ed-save">Save changes</button>', {wide:true, noFocus:true});
+        $('#ed-save', m).addEventListener('click', async function(ev){
+          var eb = $('#ed-err', m); eb.classList.add('hidden');
+          try { await M.withBusy(ev.currentTarget, 'Saving', function(){ return api('/api/knowledge/' + doc.id, {method:'PUT', timeout:120000, body:{title: $('#ed-title', m).value, content: $('#ed-text', m).value}}); }); M.closeModal(); M.toast('Updated.', 'good'); reload(); }
+          catch(er){ eb.textContent = M.errText(er); eb.classList.remove('hidden'); }
+        });
+      } catch(er2){ M.toast(M.errText(er2), 'bad'); }
+      return;
+    }
+    if((b = e.target.closest('[data-rm]'))){
+      var d = docs.filter(function(x){ return String(x.id) === b.dataset.rm; })[0];
+      if(!(await M.confirmBox('Delete "' + (d.title || d.filename) + '"?', 'Your AI will forget this. This cannot be undone.', 'Delete', true))) return;
+      try { await api('/api/knowledge/' + d.id, {method:'DELETE'}); docs = docs.filter(function(x){ return x.id !== d.id; }); paintList(); M.toast('Deleted.', 'good'); } catch(er3){ M.toast(M.errText(er3), 'bad'); }
+    }
+  };
+  el.onchange = function(e){ if(e.target.id === 'kb-file') uploadFile(e.target.files[0]); };
+  el.ondragover = function(e){ var d = e.target.closest('#kb-drop'); if(d){ e.preventDefault(); d.classList.add('over'); } };
+  el.ondragleave = function(e){ var d = e.target.closest('#kb-drop'); if(d) d.classList.remove('over'); };
+  el.ondrop = function(e){ var d = e.target.closest('#kb-drop'); if(d){ e.preventDefault(); d.classList.remove('over'); uploadFile(e.dataTransfer.files[0]); } };
+  paintAdd(); paintList();
+  M.addTimer({}); // placeholder so leaving the page also stops a running recording
+  var stopper = function(){ stopRec(); stopStream(); window.removeEventListener('hashchange', stopper); };
+  window.addEventListener('hashchange', stopper);
+};
+
+/* ============================================================
+   ALERTS (waiting customers + phone notifications)
+   ============================================================ */
+function b64ToU8(b){ var p = '='.repeat((4 - b.length % 4) % 4), s = atob((b + p).replace(/-/g, '+').replace(/_/g, '/')), o = new Uint8Array(s.length); for(var i = 0; i < s.length; i++) o[i] = s.charCodeAt(i); return o; }
+function pushSupported(){ return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; }
+async function swReg(){ var r = await navigator.serviceWorker.register('/sw.js'); await navigator.serviceWorker.ready; return r; }
+async function pushEnable(){
+  if(!pushSupported()) throw new Error('This browser cannot show alerts. On an iPhone, open this site in Safari, tap Share, choose Add to Home Screen, then open it from your Home Screen and try again.');
+  var perm = await Notification.requestPermission();
+  if(perm !== 'granted') throw new Error('Alerts are blocked for this website. Allow notifications in your browser settings, then try again.');
+  var reg = await swReg(), key = await api('/api/push/public-key');
+  var sub = await reg.pushManager.getSubscription();
+  if(!sub) sub = await reg.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: b64ToU8(key.public_key)});
+  await api('/api/push/subscribe', {method:'POST', body: sub.toJSON()});
+  try { localStorage.setItem('mdk_push_on', '1'); } catch(e){}
+}
+async function pushDisable(){
+  var reg = await navigator.serviceWorker.getRegistration('/sw.js'), sub = reg && await reg.pushManager.getSubscription();
+  if(sub){ try { await api('/api/push/unsubscribe', {method:'POST', body:{endpoint: sub.endpoint}}); } catch(e){} await sub.unsubscribe(); }
+  try { localStorage.removeItem('mdk_push_on'); } catch(e){}
+}
+M.pushResume = async function(){
+  try {
+    if(!pushSupported() || Notification.permission !== 'granted' || localStorage.getItem('mdk_push_on') !== '1') return;
+    var reg = await swReg(), sub = await reg.pushManager.getSubscription();
+    if(sub) await api('/api/push/subscribe', {method:'POST', body: sub.toJSON()});
+  } catch(e){}
+};
+async function pushState(){
+  if(!pushSupported()) return 'unsupported';
+  if(Notification.permission === 'denied') return 'blocked';
+  try { var reg = await navigator.serviceWorker.getRegistration('/sw.js'), sub = reg && await reg.pushManager.getSubscription(); return sub && Notification.permission === 'granted' ? 'on' : 'off'; } catch(e){ return 'off'; }
+}
+
+M.views.alerts = async function(el){
+  var cfg = await M.getCfg().catch(function(){ return {}; });
+  var tab = 'waiting', list = [], ps = await pushState();
+  function pushCard(){
+    var on = ps === 'on', msg;
+    if(cfg.push_available === false) msg = 'Phone alerts are not available yet.';
+    else if(ps === 'unsupported') msg = 'This browser cannot show alerts. On an iPhone, open this site in Safari, tap Share, choose Add to Home Screen, then open MatrixDesk from your Home Screen.';
+    else if(ps === 'blocked') msg = 'Alerts are blocked for this website. Allow notifications in your browser settings to turn them on.';
+    else msg = on ? 'This device buzzes when a customer needs you or writes to a chat the AI is not answering.' : 'Get a notification on this device when a customer needs you, even when MatrixDesk is closed.';
+    var canToggle = cfg.push_available !== false && (ps === 'on' || ps === 'off');
+    return '<div class="card" style="margin-bottom:14px"><div class="row"><div class="ico">' + ico('bell') + '</div><div class="grow"><h3 style="margin:0">Phone alerts</h3><p class="sub" style="margin:2px 0 0">' + esc(msg) + '</p></div>' + (canToggle ? '<button class="toggle ' + (on ? 'on' : '') + '" id="pu-toggle" role="switch" aria-checked="' + on + '" aria-label="Phone alerts"></button>' : '') + '</div></div>';
+  }
+  async function loadList(){
+    var box = $('#al-list', el); box.innerHTML = '<div class="skel" style="height:90px"></div>';
+    try { list = await api('/api/handover/list?status=' + tab); } catch(e){ box.innerHTML = '<div class="card"><p class="muted">' + esc(M.errText(e)) + '</p></div>'; return; }
+    if(!list.length){ box.innerHTML = '<div class="card empty"><h3>' + (tab === 'waiting' ? 'No one is waiting for you' : 'Nothing here yet') + '</h3><p>' + (tab === 'waiting' ? 'When your AI cannot help a customer, or a customer is ready to buy, they show up here.' : 'Customers you have finished with show up here.') + '</p></div>'; return; }
+    box.innerHTML = '<div class="card flat list">' + list.map(function(a){
+      var k = CH[a.channel] || CH.whatsapp, can = M.connectedList().indexOf(k.key) >= 0;
+      return '<div class="it" style="align-items:flex-start"><div class="ico ' + k.short + '">' + ico(k.key) + '</div><div class="grow"><b>' + esc(a.customer_label || a.customer_phone) + '</b><div class="small muted">' + esc(k.name) + ' · ' + esc(M.ago(a.created_at)) + '</div><div style="margin-top:6px;font-size:14px">' + esc(a.summary || a.reason || '') + '</div>' +
+        (tab === 'waiting' ? '<div class="row wrap" style="margin-top:10px">' + (can ? '<a class="btn sm primary" href="#/inbox/' + k.key + '?chat=' + encodeURIComponent(a.customer_phone) + '">Open chat</a>' : '') + '<button class="btn sm" data-done="' + esc(a.id) + '">Mark as done</button></div>' : '') + '</div></div>';
+    }).join('') + '</div>';
+  }
+  el.innerHTML = head('Alerts', 'Customers who need you, and how you get told about them.') + pushCard() +
+    '<div class="seg" style="margin-bottom:12px"><button class="chip on" data-tab="waiting">Needs you</button><button class="chip" data-tab="resolved">Done</button></div><div id="al-list"></div>';
+  el.onclick = async function(e){
+    var b;
+    if((b = e.target.closest('[data-tab]'))){ tab = b.dataset.tab; $$('[data-tab]', el).forEach(function(x){ x.classList.toggle('on', x === b); }); loadList(); return; }
+    if((b = e.target.closest('[data-done]'))){
+      try { await M.withBusy(b, '', function(){ return api('/api/handover/resolve', {method:'POST', body:{alert_id: b.dataset.done}}); }); M.toast('Marked as done.', 'good'); loadList(); M.loadSummary(); } catch(er){ M.toast(M.errText(er), 'bad'); }
+      return;
+    }
+    if((b = e.target.closest('#pu-toggle'))){
+      var turnOn = ps !== 'on';
+      try { if(turnOn) await pushEnable(); else await pushDisable(); ps = await pushState(); $('#pu-toggle', el).closest('.card').outerHTML = pushCard(); M.toast(turnOn ? 'Phone alerts are on.' : 'Phone alerts are off.', 'good'); }
+      catch(er2){ M.toast(M.errText(er2), 'bad'); ps = await pushState(); $('#pu-toggle', el).closest('.card').outerHTML = pushCard(); }
+    }
+  };
+  loadList();
+  M.addTimer(setInterval(function(){ if(!document.hidden && tab === 'waiting') loadList(); }, 30000));
+};
+})();
+</script>
+<script>
+(function(){
+'use strict';
+var M = window.MDK;
+function boot(){
+  M.S.session = M.loadSession();
+  var path = (location.pathname.replace(/\/index\.html$/, '/').replace(/\/+$/, '')) || '/', m;
+  if(/type=recovery/.test(location.hash) && /access_token=/.test(location.hash)){ M.screens.recovery(location.hash); return; }
+  if((m = path.match(/^\/connect\/(instagram|facebook)$/))){ M.screens.connect(m[1]); return; }
+  if(path === '/prepay/verify'){ M.screens.prepayVerify(); return; }
+  if(path === '/billing/verify'){ M.screens.billingVerify(); return; }
+  if(path === '/dashboard' || path === '/dashboard.html'){
+    if(!M.S.session){ M.gateInit(); M.openAuth('signin'); return; }
+    M.dashStart(); return;
+  }
+  if(M.S.session && path === '/' && !location.search && !location.hash){ location.replace('/dashboard'); return; }
+  M.gateInit();
+}
+window.addEventListener('unhandledrejection', function(e){ try { console.warn('MatrixDesk:', e.reason); } catch(x){} });
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+</body>
+</html>
